@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piano 30 Hari — Belajar Main Piano/Keyboard dari Kosong</title>
+<meta name="description" content="Ebook webapp interaktif: belajar main piano/keyboard dalam 30 hari. Chord, chord progression & lagu kegemaran — tanpa guru, mengikut rentak sendiri.">
+<style>
+/* ============================================================
+   Piano 30 Hari — Design System
+   Tema: ivory piano + ink + aksen terracotta. Editorial, mesra umur semua.
+   ============================================================ */
+:root {
+  --bg: #FBF7EF;
+  --bg2: #F3EDE0;
+  --ink: #2A231B;
+  --muted: #7A6E5D;
+  --line: #E5DCCB;
+  --accent: #B4531F;
+  --accent-dark: #8F3E14;
+  --accent-soft: #F5E2D3;
+  --ok: #4C7A4F;
+  --ok-soft: #E2EFE3;
+  --white-key: #FFFDF8;
+  --black-key: #2A231B;
+  --gold: #C99A3C;
+  --shadow: 0 2px 10px rgba(42,35,27,.08);
+  --shadow-lg: 0 10px 32px rgba(42,35,27,.14);
+  --r: 14px;
+  --serif: Georgia, 'Times New Roman', 'Palatino Linotype', serif;
+  --sans: 'Segoe UI', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- Header ---------- */
+.top {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(251,247,239,.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.top-in {
+  max-width: 1080px; margin: 0 auto; padding: 12px 20px;
+  display: flex; align-items: center; gap: 14px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+.brand .logo {
+  width: 38px; height: 38px; border-radius: 10px; flex: none;
+  background: linear-gradient(145deg, #2A231B, #4A3E30);
+  display: grid; place-items: center; font-size: 19px;
+  box-shadow: var(--shadow);
+}
+.brand b { font-family: var(--serif); font-size: 19px; letter-spacing: .2px; }
+.brand small { display: block; font-size: 11px; color: var(--muted); font-weight: 400; }
+.top .progress-wrap { flex: 1; max-width: 320px; margin-left: auto; }
+.progress-label { font-size: 12px; color: var(--muted); text-align: right; margin-bottom: 3px; }
+.progress-bar { height: 9px; background: var(--bg2); border-radius: 99px; overflow: hidden; border: 1px solid var(--line); }
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 99px; transition: width .5s ease;
+}
+
+/* ---------- Layout ---------- */
+.wrap { max-width: 860px; margin: 0 auto; padding: 28px 20px 80px; }
+.hero { padding: 34px 0 10px; }
+.hero .kicker { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 2.5px; text-transform: uppercase; }
+.hero h1 { font-family: var(--serif); font-size: clamp(34px, 6vw, 52px); line-height: 1.12; margin: 10px 0 14px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero p.lead { font-size: 19px; color: var(--muted); max-width: 56ch; }
+.hero .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.pill {
+  background: #fff; border: 1px solid var(--line); border-radius: 99px;
+  padding: 7px 15px; font-size: 13.5px; color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.pill b { color: var(--accent); }
+
+/* ---------- Week band ---------- */
+.week-band {
+  margin: 34px 0 14px; display: flex; align-items: baseline; gap: 14px;
+}
+.week-band h2 { font-family: var(--serif); font-size: 24px; }
+.week-band .wk-sub { color: var(--muted); font-size: 14px; }
+.week-line { border: none; border-top: 1px solid var(--line); margin: 6px 0 18px; }
+
+/* ---------- Day rack ---------- */
+.rack { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.day-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r);
+  padding: 16px 16px 14px; cursor: pointer; position: relative;
+  box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease;
+  display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: var(--ink);
+}
+.day-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.day-card .num {
+  font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+  color: var(--accent); text-transform: uppercase;
+}
+.day-card h3 { font-family: var(--serif); font-size: 18px; line-height: 1.3; font-weight: 700; }
+.day-card p { font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+.day-card .done-badge {
+  position: absolute; top: 12px; right: 12px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--ok-soft); color: var(--ok);
+  display: grid; place-items: center; font-size: 14px; font-weight: 700;
+  border: 1px solid #CFE3D0;
+}
+.day-card.is-done { border-color: #CFE3D0; background: #FAFDF9; }
+
+/* ---------- Day view ---------- */
+.crumb { font-size: 13.5px; margin-bottom: 18px; }
+.crumb a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.crumb span { color: var(--muted); }
+.day-head { margin-bottom: 22px; }
+.day-head .num { color: var(--accent); font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+.day-head h1 { font-family: var(--serif); font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 8px 0 10px; }
+.goal {
+  background: var(--accent-soft); border: 1px solid #EED9C6; border-radius: 12px;
+  padding: 12px 16px; font-size: 15.5px; margin-top: 12px;
+}
+.goal b { color: var(--accent-dark); }
+section.lesson { margin: 30px 0; }
+section.lesson h2 {
+  font-family: var(--serif); font-size: 24px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+section.lesson h2 .no {
+  display: inline-grid; place-items: center; width: 34px; height: 34px; flex: none;
+  background: var(--ink); color: var(--bg); border-radius: 10px; font-size: 16px;
+  font-family: var(--sans); font-weight: 700;
+}
+section.lesson p { margin-bottom: 12px; }
+section.lesson ul, section.lesson ol { margin: 0 0 12px 22px; }
+section.lesson li { margin-bottom: 6px; }
+.tip {
+  background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--gold);
+  border-radius: 10px; padding: 12px 16px; font-size: 15px; margin: 14px 0;
+}
+.tip b { color: var(--accent-dark); }
+.kbd {
+  display: inline-block; min-width: 24px; text-align: center;
+  background: #fff; border: 1px solid var(--line); border-bottom-width: 3px;
+  border-radius: 6px; padding: 1px 7px; font-size: .9em; font-weight: 700;
+}
+
+/* ---------- Widgets ---------- */
+.widget {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow); margin: 16px 0; overflow: hidden;
+}
+.widget-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--bg2);
+}
+.widget-head .wtitle { font-weight: 700; font-size: 15px; }
+.widget-head .wsub { font-size: 12.5px; color: var(--muted); }
+.widget-body { padding: 16px; }
+.widget .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.btn {
+  font-family: var(--sans); font-size: 14.5px; font-weight: 600;
+  background: var(--accent); color: #fff; border: none; border-radius: 10px;
+  padding: 10px 18px; cursor: pointer; min-height: 44px;
+  box-shadow: 0 2px 6px rgba(180,83,31,.3); transition: background .15s ease, transform .1s ease;
+}
+.btn:hover { background: var(--accent-dark); }
+.btn:active { transform: scale(.97); }
+.btn.ghost { background: #fff; color: var(--accent-dark); border: 1.5px solid var(--accent); box-shadow: none; }
+.btn.ghost:hover { background: var(--accent-soft); }
+.btn.small { padding: 6px 13px; min-height: 36px; font-size: 13px; border-radius: 8px; }
+.chip-btn {
+  font-size: 15px; font-weight: 700; padding: 9px 16px; min-width: 44px;
+  border-radius: 10px; border: 1.5px solid var(--line); background: #fff;
+  cursor: pointer; transition: all .15s ease;
+}
+.chip-btn:hover { border-color: var(--accent); color: var(--accent-dark); }
+.chip-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+input[type=range] { accent-color: var(--accent); }
+.bpm-val { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent-dark); min-width: 40px; }
+
+/* ---------- Keyboard ---------- */
+.kb-shell { overflow-x: auto; padding: 6px 2px 2px; }
+.kb {
+  position: relative; display: flex; height: 150px; min-width: 480px;
+  border-radius: 8px 8px 6px 6px; overflow: hidden;
+  border: 2px solid var(--ink); background: var(--ink);
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,.25);
+}
+.kb.small { height: 118px; }
+.wk {
+  flex: 1; position: relative; background: var(--white-key);
+  border-right: 1px solid #D8D2C4; cursor: pointer;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 7px; font-size: 12px; font-weight: 700; color: #9A8F7B;
+  transition: background .07s ease; border-radius: 0 0 4px 4px;
+}
+.wk:last-child { border-right: none; }
+.wk:active, .wk.hit { background: var(--accent-soft); }
+.wk.hl { background: var(--accent-soft); box-shadow: inset 0 -6px 0 var(--accent); }
+.wk.hl::after {
+  content: attr(data-lbl); position: absolute; top: 8px;
+  background: var(--accent); color: #fff; border-radius: 99px;
+  font-size: 10px; padding: 2px 8px; font-weight: 700;
+}
+.bk {
+  position: absolute; top: 0; width: 6.4%; height: 60%;
+  background: linear-gradient(180deg, #3A3128, var(--black-key) 20%);
+  border-radius: 0 0 4px 4px; z-index: 5; cursor: pointer;
+  border: 1px solid #1E1912; border-top: none;
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: 5px; font-size: 10px; font-weight: 700; color: #8D8272;
+}
+.bk:active, .bk.hit { background: var(--accent-dark); }
+.bk.hl { background: var(--accent-dark); box-shadow: inset 0 -5px 0 var(--gold); }
+.kb.hands .wk::before { font-size: 11px; color: #B3A88F; position: static; }
+
+/* Song strip */
+.strip { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.strip span {
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 7px;
+  padding: 3px 9px; font-size: 12.5px; font-weight: 700; color: var(--ink);
+  transition: all .1s ease;
+}
+.strip span.on { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateY(-2px); }
+
+/* Metronome lamp */
+.lamp {
+  width: 16px; height: 16px; border-radius: 50%; background: var(--bg2);
+  border: 1px solid var(--line); display: inline-block; vertical-align: middle;
+}
+.lamp.on { background: var(--accent); border-color: var(--accent); }
+
+/* Checklist */
+.check-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 4px; border-bottom: 1px dashed var(--line); cursor: pointer; }
+.check-item:last-child { border-bottom: none; }
+.check-item input { width: 20px; height: 20px; accent-color: var(--accent); margin-top: 2px; flex: none; }
+.check-item label { cursor: pointer; }
+.check-item.done label { color: var(--ok); text-decoration: line-through; }
+
+/* ---------- Day footer nav ---------- */
+.day-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 40px; }
+.day-nav a {
+  flex: 1; max-width: 48%; background: #fff; border: 1px solid var(--line);
+  border-radius: var(--r); padding: 14px 18px; text-decoration: none; color: var(--ink);
+  box-shadow: var(--shadow); transition: transform .15s ease;
+}
+.day-nav a:hover { transform: translateY(-2px); }
+.day-nav .dir { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.day-nav b { font-family: var(--serif); font-size: 16px; }
+.day-nav a.next { text-align: right; }
+
+.finish {
+  margin-top: 26px; background: #fff; border: 1px solid var(--line); border-radius: var(--r);
+  padding: 18px 20px; text-align: center; box-shadow: var(--shadow);
+}
+.finish .btn.done-btn { background: var(--ok); box-shadow: 0 2px 6px rgba(76,122,79,.3); width: 100%; max-width: 380px; }
+.finish .btn.done-btn.is-done { background: var(--ok-soft); color: var(--ok); border: 1.5px solid var(--ok); box-shadow: none; }
+.finish p { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+footer.site {
+  border-top: 1px solid var(--line); margin-top: 60px; padding: 26px 20px 40px;
+  text-align: center; color: var(--muted); font-size: 13.5px;
+}
+footer.site b { color: var(--ink); }
+
+@media (max-width: 560px) {
+  .top-in { flex-wrap: wrap; gap: 8px; }
+  .top .progress-wrap { order: 5; width: 100%; max-width: none; }
+  .rack { grid-template-columns: 1fr 1fr; }
+  .day-card h3 { font-size: 15px; }
+  .day-card p { display: none; }
+  .day-nav a { max-width: none; }
+}
+
+/* ============================================================
+   MELODI — pesona comel (CSS-animated)
+   ============================================================ */
+.melodi-row { display: flex; align-items: center; gap: 14px; margin: 18px 0; }
+.melodi-row.small { margin: 0; }
+.melodi-row.in-head { margin: 0; }
+.melodi-row.in-head .melodi { transform: scale(.62); margin: -10px -8px; }
+
+.melodi { position: relative; width: 78px; height: 86px; flex: none; }
+.m-body {
+  position: absolute; top: 14px; left: 7px; width: 64px; height: 60px;
+  background: radial-gradient(120% 120% at 30% 20%, #FFEFC9 0%, #F9D488 55%, #F0B95E 100%);
+  border-radius: 50% 50% 46% 46%;
+  box-shadow: inset 0 -4px 8px rgba(180,83,31,.18), 0 3px 6px rgba(42,35,27,.12);
+  animation: m-float 3.2s ease-in-out infinite;
+}
+.m-note {
+  position: absolute; top: -4px; left: 50%; transform: translateX(-50%);
+  font-size: 26px; color: var(--accent); font-weight: 700; z-index: 2;
+  text-shadow: 0 1px 0 rgba(255,255,255,.6);
+  animation: m-sway 2.6s ease-in-out infinite;
+}
+.m-shadow {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 46px; height: 9px; background: rgba(42,35,27,.14);
+  border-radius: 50%; animation: m-shadow 3.2s ease-in-out infinite;
+}
+.m-eye {
+  position: absolute; top: 20px; width: 11px; height: 13px;
+  background: var(--ink); border-radius: 50%;
+  animation: m-blink 4.4s infinite;
+}
+.m-eye.l { left: 15px; } .m-eye.r { right: 15px; }
+.m-eye::after {
+  content: ''; position: absolute; top: 1.5px; left: 2px; width: 4px; height: 4px;
+  background: #fff; border-radius: 50%;
+}
+.m-cheek {
+  position: absolute; top: 33px; width: 9px; height: 6px;
+  background: rgba(233,122,99,.55); border-radius: 50%;
+}
+.m-cheek.l { left: 9px; } .m-cheek.r { right: 9px; }
+.m-mouth {
+  position: absolute; top: 34px; left: 50%; transform: translateX(-50%);
+  width: 15px; height: 8px; border-bottom: 3px solid var(--ink);
+  border-radius: 0 0 12px 12px; transition: all .2s ease;
+}
+.m-arm {
+  position: absolute; top: 32px; width: 15px; height: 8px;
+  background: #F0B95E; border-radius: 8px; transition: transform .25s ease;
+}
+.m-arm.l { left: -9px; transform: rotate(18deg); }
+.m-arm.r { right: -9px; transform: rotate(-18deg); }
+
+.melodi.happy .m-body { animation: m-jump .55s ease; }
+.melodi.happy .m-mouth { width: 18px; height: 11px; border-bottom-width: 3.5px; }
+.melodi.happy .m-arm.l { transform: rotate(-55deg); }
+.melodi.happy .m-arm.r { transform: rotate(55deg); }
+.melodi.happy .m-note { animation: m-sway 0.6s ease-in-out infinite; }
+.melodi.happy .m-hearts { display: block; }
+.melodi.sad .m-eye { height: 3px; top: 24px; border-radius: 3px; }
+.melodi.sad .m-mouth { border: none; border-top: 3px solid var(--ink); border-radius: 12px 12px 0 0; width: 13px; }
+.melodi.sad .m-body { animation: m-droop 1s ease forwards; }
+.melodi.sad .m-arm.l { transform: rotate(40deg); top: 40px; }
+.melodi.sad .m-arm.r { transform: rotate(-40deg); top: 40px; }
+.melodi.wiggle .m-body { animation: m-wiggle .5s ease; }
+
+.m-hearts { display: none; }
+.m-hearts span {
+  position: absolute; color: #E4584C; font-size: 15px; opacity: 0;
+  animation: m-heart 1.1s ease-out forwards;
+}
+.m-hearts span:nth-child(1) { left: 8px; top: 4px; }
+.m-hearts span:nth-child(2) { left: 34px; top: -8px; animation-delay: .12s; font-size: 12px; }
+.m-hearts span:nth-child(3) { left: 58px; top: 6px; animation-delay: .22s; }
+
+.m-bubble {
+  position: relative; background: #fff; border: 1.5px solid var(--line);
+  border-radius: 14px; padding: 10px 15px; font-size: 15px; max-width: 560px;
+  box-shadow: var(--shadow); animation: m-bubble-in .35s ease;
+}
+.m-bubble::before {
+  content: ''; position: absolute; left: -7px; top: 50%; margin-top: -7px;
+  width: 12px; height: 12px; background: #fff;
+  border-left: 1.5px solid var(--line); border-bottom: 1.5px solid var(--line);
+  transform: rotate(45deg);
+}
+
+@keyframes m-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes m-shadow { 0%,100% { transform: translateX(-50%) scale(1); opacity: .9; } 50% { transform: translateX(-50%) scale(.82); opacity: .55; } }
+@keyframes m-sway { 0%,100% { transform: translateX(-50%) rotate(-14deg); } 50% { transform: translateX(-50%) rotate(14deg); } }
+@keyframes m-blink { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(.08); } 97% { transform: scaleY(1); } }
+@keyframes m-jump { 0% { transform: translateY(0) scale(1,1); } 30% { transform: translateY(-14px) scale(.96,1.06); } 60% { transform: translateY(0) scale(1.06,.94); } 100% { transform: translateY(0) scale(1,1); } }
+@keyframes m-droop { 0% { transform: translateY(0) rotate(0); } 100% { transform: translateY(4px) rotate(-7deg); } }
+@keyframes m-wiggle { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-9deg) translateY(-3px); } 75% { transform: rotate(9deg) translateY(-3px); } }
+@keyframes m-heart { 0% { opacity: 0; transform: translateY(6px) scale(.5); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-30px) scale(1.15); } }
+@keyframes m-bubble-in { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
+
+/* ============================================================
+   KUIZ
+   ============================================================ */
+.quiz-widget .widget-head { align-items: center; }
+.q-progress { font-size: 11.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.q-text { font-family: var(--serif); font-size: 19px; font-weight: 700; line-height: 1.35; margin-bottom: 12px; }
+.q-opts { display: grid; gap: 8px; }
+.q-opt {
+  text-align: left; padding: 12px 16px; min-height: 44px;
+  border: 1.5px solid var(--line); border-radius: 10px; background: #fff;
+  cursor: pointer; font-family: var(--sans); font-size: 15.5px; color: var(--ink);
+  transition: border-color .15s ease, background .15s ease;
+}
+.q-opt:hover:not(:disabled) { border-color: var(--accent); background: #FFFCF5; }
+.q-opt:disabled { cursor: default; }
+.q-opt.correct { border-color: var(--ok); background: var(--ok-soft); font-weight: 700; }
+.q-opt.correct::after { content: ' ✓'; color: var(--ok); }
+.q-opt.wrong { border-color: #C0543F; background: #F9E4DD; animation: q-shake .35s ease; }
+.q-why { margin-top: 12px; font-size: 14.5px; color: var(--ink); background: var(--bg2); border-radius: 10px; padding: 10px 14px; line-height: 1.5; }
+.q-why .ok-txt { color: var(--ok); }
+.q-why .bad-txt { color: #C0543F; }
+.q-next { margin-top: 12px; }
+.q-end { text-align: center; padding: 8px 0 4px; }
+.q-score { font-family: var(--serif); font-size: 42px; font-weight: 700; color: var(--accent); line-height: 1; }
+.q-end.perfect .q-score { color: var(--ok); animation: m-jump .55s ease; }
+.q-end p { margin-top: 8px; font-size: 15px; }
+.q-meta { margin-top: 6px; font-size: 12.5px; color: var(--muted); letter-spacing: .5px; }
+@keyframes q-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ============================================================
+   PAPAN LAGU MELODI — sistem mata (nota → lagu penuh)
+   ============================================================ */
+.songboard {
+  background: #fff; border: 1.5px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-lg); padding: 20px 22px 22px; margin: 26px 0 8px;
+  position: relative; overflow: hidden;
+}
+.songboard::before {
+  content: '♪ ♫ ♪'; position: absolute; right: 14px; top: 6px;
+  font-size: 30px; color: var(--line); letter-spacing: 6px; pointer-events: none;
+}
+.sb-head .wtitle { font-family: var(--serif); font-size: 21px; font-weight: 700; }
+.sb-head .wsub { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+.sb-stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
+
+.sb-board { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.snote {
+  position: relative; width: 30px; height: 30px; flex: none;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transition: transform .15s ease;
+}
+.snote::after { /* batang nota */
+  content: ''; position: absolute; right: -4px; top: -12px;
+  width: 2.5px; height: 26px; border-radius: 3px; background: inherit;
+}
+.snote.locked {
+  background: transparent; border: 2px dashed #D8D2C4; box-sizing: border-box;
+}
+.snote.locked::after { background: #D8D2C4; opacity: .6; }
+.snote.plain { background: #B8AE9C; }
+.snote.silver {
+  background: #A9B0B8;
+  box-shadow: inset -3px -3px 0 rgba(42,35,27,.12), inset 3px 3px 0 rgba(255,255,255,.55);
+}
+.snote.gold {
+  background: var(--gold);
+  box-shadow: inset -3px -3px 0 rgba(143,110,26,.35), inset 3px 3px 0 rgba(255,255,255,.6);
+}
+.snote.gold::before {
+  content: '★'; position: absolute; top: -16px; right: -6px;
+  font-size: 11px; color: var(--gold);
+  animation: m-sway 2.4s ease-in-out infinite;
+}
+.snote.playing { transform: translateY(-7px) scale(1.22); z-index: 3; }
+.snote:not(.locked):hover { transform: translateY(-4px) scale(1.12); cursor: default; }
+
+.sb-week {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 1px; color: var(--accent);
+  border: 1.5px solid var(--accent); border-radius: 99px; padding: 2px 8px;
+  flex: none; margin: 0 3px;
+}
+.sb-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 14px; }
+.sb-badge {
+  font-size: 12.5px; font-weight: 700; color: var(--muted);
+  background: var(--bg2); border: 1.5px solid var(--line);
+  border-radius: 99px; padding: 5px 13px;
+}
+.sb-badge.reached { color: var(--accent-dark); border-color: var(--accent); background: var(--accent-soft); }
+.sb-badge.grad { color: #fff; background: var(--ok); border-color: var(--ok); box-shadow: 0 2px 8px rgba(76,122,79,.35); }
+.sb-hint { font-size: 13.5px; color: var(--muted); margin-top: 10px; }
+.m-bubble.pop { animation: sb-pop .45s ease; }
+@keyframes sb-pop { 0% { transform: scale(.92); } 55% { transform: scale(1.04); } 100% { transform: scale(1); } }
+
+.melodi.conducting { animation: none; }
+.melodi.conducting .m-body { animation: m-wiggle .5s ease infinite; }
+.melodi.conducting .m-note { animation: m-sway .5s ease-in-out infinite; }
+
+/* Confetti */
+.p30-confetti {
+  position: fixed; inset: 0; z-index: 200; pointer-events: none; overflow: hidden;
+}
+.p30-confetti span {
+  position: absolute; top: -20px; border-radius: 2px;
+  animation-name: p30-fall; animation-timing-function: linear; animation-fill-mode: forwards;
+}
+@keyframes p30-fall {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: .7; }
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#/">
+      <span class="logo">🎹</span>
+      <span><b>Piano 30 Hari</b><small>ebook interaktik — dari kosong ke lagu</small></span>
+    </a>
+    <div class="progress-wrap">
+      <div class="progress-label" id="plabel">0/30 hari · 0%</div>
+      <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+    </div>
+  </div>
+</header>
+<main id="app" class="wrap"></main>
+<footer class="site">
+  <b>🎹 Piano 30 Hari</b> — ebook interaktif percuma, untuk sesiapa yang mahu mula bermain muzik.<br>
+  Progress disimpan dalam pelayar anda (localStorage). Tiada akaun diperlukan.
+</footer>
+<script>
+/* ===== audio.js ===== */
+/* ============================================================
+   Piano 30 Hari — Audio Engine
+   Web Audio API synth (bunyi piano-ish, tiada fail audio).
+   + helper teori muzik: not → frekuensi, parse simbol chord.
+   ============================================================ */
+const Audio30 = (() => {
+  let ctx = null, master = null;
+
+  function ensure() {
+    if (!ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      ctx = new AC();
+      master = ctx.createGain();
+      master.gain.value = 0.85;
+      master.connect(ctx.destination);
+    }
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
+
+  /* ---------- Not → MIDI → frekuensi ---------- */
+  const PC = { C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11 };
+  const NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+  function midiOf(name) { // "C4" → 60
+    const m = /^([A-G][#b]?)(-?\d)$/.exec(name);
+    if (!m) return 60;
+    return (parseInt(m[2], 10) + 1) * 12 + PC[m[1]];
+  }
+  function nameOf(m) { // 60 → "C4"
+    return NAMES[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
+  }
+  function freqOf(name) {
+    const midi = (typeof name === 'number') ? name : midiOf(name);
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+
+  /* ---------- Synth voice ---------- */
+  function tone(f, t, dur, vol) {
+    ensure();
+    dur = dur || 0.8; vol = (vol == null) ? 0.5 : vol;
+    const o1 = ctx.createOscillator(); // badan not
+    const o2 = ctx.createOscillator(); // harmonic atas → rasa "ping" piano
+    const o3 = ctx.createOscillator(); // sub lembut
+    const g = ctx.createGain();
+    const g2 = ctx.createGain(); g2.gain.value = 0.22;
+    const g3 = ctx.createGain(); g3.gain.value = 0.30;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = Math.min(7000, f * 7);
+
+    o1.type = 'triangle'; o1.frequency.value = f;
+    o2.type = 'sine';     o2.frequency.value = f * 2;
+    o3.type = 'sine';     o3.frequency.value = f * 0.5;
+
+    o1.connect(g); o2.connect(g2); g2.connect(g); o3.connect(g3); g3.connect(g);
+    g.connect(lp); lp.connect(master);
+
+    const a = 0.006, rel = Math.max(dur, 0.22);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + a);
+    g.gain.exponentialRampToValueAtTime(0.12 * vol, t + rel * 0.65);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + rel);
+    [o1, o2, o3].forEach(o => { o.start(t); o.stop(t + rel + 0.05); });
+  }
+
+  function now() { ensure(); return ctx.currentTime + 0.02; }
+  function playNote(name, when, dur, vol) { tone(freqOf(name), now() + (when || 0), dur, vol); }
+
+  /* ---------- Metronome click ---------- */
+  function click(when, accent) {
+    ensure();
+    const t = now() + when;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'square';
+    o.frequency.value = accent ? 1660 : 1180;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(accent ? 0.42 : 0.24, t + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.1);
+  }
+
+  return { ensure, now, tone, click, playNote, freqOf, midiOf, nameOf, NAMES };
+})();
+
+/* ============================================================
+   Teori: parse simbol chord → not sebenar
+   Format disokong: "C", "Am", "Gsus4", "Csus2", "Dm7", "G7",
+   "F/C" (slash chord), "Fmaj7", "Bdim"
+   ============================================================ */
+const CHORD_QUAL = {
+  '':      [0, 4, 7],
+  'm':     [0, 3, 7],
+  'sus2':  [0, 2, 7],
+  'sus4':  [0, 5, 7],
+  '7':     [0, 4, 7, 10],
+  'm7':    [0, 3, 7, 10],
+  'maj7':  [0, 4, 7, 11],
+  'dim':   [0, 3, 6],
+  'aug':   [0, 4, 8]
+};
+
+function parseChord(sym) {
+  let bass = null, body = sym;
+  if (sym.includes('/')) { const p = sym.split('/'); body = p[0]; bass = p[1]; }
+  const m = /^([A-G][#b]?)(.*)$/.exec(body);
+  if (!m) return { name: sym, notes: ['C4', 'E4', 'G4'], bass: null, sym: sym };
+  const rootPc = Audio30.midiOf(m[1] + '4') - 60;
+  const offs = CHORD_QUAL[m[2]] || CHORD_QUAL[''];
+  const rootMidi = 60 + rootPc; // oktaf 4
+  const notes = offs.map(o => Audio30.nameOf(rootMidi + o));
+  const bassNote = bass ? Audio30.nameOf(60 + (Audio30.midiOf(bass + '3') - 48)) : null;
+  return { name: body, sym, notes, bass: bassNote, formula: m[2] || 'major', root: m[1] };
+}
+
+/* Pecahkan chord ke posisi "kekal tangan" — root oktaf 4 + notes berdekatan */
+function closeVoicing(ch) {
+  const base = Audio30.midiOf(ch.notes[0]);
+  return ch.notes.map((n, i) => Audio30.nameOf(base + CHORD_QUAL[ch.formula][i]));
+}
+
+/* ===== data.js ===== */
+/* ============================================================
+   Piano 30 Hari — Kandungan (30 hari, 4 minggu)
+   Setiap hari: { n, week, title, emoji, goal, secs[], practice }
+   secs[i].w = widget interaktif:
+     freeplay {lo,hi} | chord {syms[]} | scale {notes[],both}
+     prog {chords[],pattern:'block|beat8|waltz|arp',bpm}
+     song {id} | metro {bpm} | check {items[]}
+   ============================================================ */
+
+const SONGS = {
+  mary: {
+    title: 'Mary Had a Little Lamb',
+    bpm: 90,
+    notes: [ // [not, len dalam beat]
+      ['E4',1],['D4',1],['C4',1],['D4',1],['E4',1],['E4',1],['E4',2],
+      ['D4',1],['D4',1],['D4',2],['E4',1],['G4',1],['G4',2],
+      ['E4',1],['D4',1],['C4',1],['D4',1],['E4',1],['E4',1],['E4',1],['E4',1],
+      ['D4',1],['D4',1],['E4',1],['D4',1],['C4',4]
+    ]
+  },
+  twinkle: {
+    title: 'Twinkle Twinkle Little Star',
+    bpm: 90,
+    notes: [
+      ['C4',1],['C4',1],['G4',1],['G4',1],['A4',1],['A4',1],['G4',2],
+      ['F4',1],['F4',1],['E4',1],['E4',1],['D4',1],['D4',1],['C4',2],
+      ['G4',1],['G4',1],['F4',1],['F4',1],['E4',1],['E4',1],['D4',2],
+      ['G4',1],['G4',1],['F4',1],['F4',1],['E4',1],['E4',1],['D4',2],
+      ['C4',1],['C4',1],['G4',1],['G4',1],['A4',1],['A4',1],['G4',2],
+      ['F4',1],['F4',1],['E4',1],['E4',1],['D4',1],['D4',1],['C4',2]
+    ]
+  },
+  ode: {
+    title: 'Ode to Joy — Beethoven',
+    bpm: 100,
+    notes: [
+      ['E4',1],['E4',1],['F4',1],['G4',1],['G4',1],['F4',1],['E4',1],['D4',1],
+      ['C4',1],['C4',1],['D4',1],['E4',1],['E4',1.5],['D4',0.5],['D4',2],
+      ['E4',1],['E4',1],['F4',1],['G4',1],['G4',1],['F4',1],['E4',1],['D4',1],
+      ['C4',1],['C4',1],['D4',1],['E4',1],['D4',1.5],['C4',0.5],['C4',2]
+    ]
+  },
+  happy: {
+    title: 'Happy Birthday',
+    bpm: 100,
+    notes: [
+      ['G3',0.75],['G3',0.25],['A3',1],['G3',1],['C4',1],['B3',2],
+      ['G3',0.75],['G3',0.25],['A3',1],['G3',1],['D4',1],['C4',2],
+      ['G3',0.75],['G3',0.25],['G4',1],['E4',1],['C4',1],['B3',1],['A3',2],
+      ['F4',0.75],['F4',0.25],['E4',1],['C4',1],['D4',1],['C4',3]
+    ]
+  },
+  ballad30: {
+    title: 'Senja Pertama (lagu latihan asal Piano 30 Hari)',
+    bpm: 80,
+    chords: ['C','G','Am','F','C','G','Am','F'],
+    notes: [
+      ['E4',2],['G4',1],['A4',1],
+      ['G4',2],['E4',1],['D4',1],
+      ['A4',1],['B4',1],['C5',2],
+      ['A4',2],['G4',2],
+      ['E4',2],['G4',2],
+      ['D4',2],['E4',1],['G4',1],
+      ['A4',3],['G4',1],
+      ['E4',2],['D4',1],['C4',1]
+    ]
+  }
+};
+
+const DAYS = [
+
+/* ================= MINGGU 1 — KENALI & MULA ================= */
+{ n: 1, week: 1, emoji: '👋', title: 'Selamat Datang & Kenali Kekunci Anda',
+  goal: 'Hari ini anda akan kenal "peta" keyboard — dan sedar bahawa 88 kekunci itu sebenarnya cuma 12 not yang BERULANG.',
+  secs: [
+    { h: 'Keyboard itu lebih mudah daripada sangkaan', body:
+      '<p>Piano ada 88 kekunci — nampak menakutkan? Tenang. Sebenarnya ia cuma <b>7 not putih</b> yang berulang berpuluh kali: <span class="kbd">C</span> <span class="kbd">D</span> <span class="kbd">E</span> <span class="kbd">F</span> <span class="kbd">G</span> <span class="kbd">A</span> <span class="kbd">B</span>, kemudian balik ke C semula. Selepas B, datang C lagi — kitaran ini dipanggil <b>oktaf</b>.</p>' +
+      '<p>Cara paling pantas mengenali not: kekunci putih <b>di sebelah kiri 2 kekunci hitam</b> itu sentiasa <b>C</b>. Tengok pola kekunci hitam: <b>2 hitam, 3 hitam, 2 hitam, 3 hitam…</b> — pola ini tak pernah berubah.</p>' },
+    { h: 'Middle C — "alamat rumah" anda', body:
+      '<p><b>Middle C</b> ialah C yang paling dekat dengan tengah keyboard. Ia "alamat rumah" untuk kedua-dua tangan. Tangan kanan lazimnya bermain di sebelah <b>kanan</b> Middle C, tangan kiri di sebelah <b>kiri</b>.</p>' +
+      '<p>Kekunci hitam pula ada dua nama: kekunci hitam selepas C ialah <b>C#</b> (atau Db). Belum perlu hafal semua — cukup kenal polanya hari ini.</p>' },
+    { h: 'Cuba sendiri', body:
+      '<p>Klik kekunci di bawah — dengar bunyinya. Cuba cari <b>semua not C</b> (yang bertanda) dari kiri ke kanan, atas dan bawah keyboard.</p>',
+      w: { t: 'freeplay', lo: 'C3', hi: 'C6', mark: ['C'] } }
+  ],
+  practice: 'Latihan hari ini (10 minit): Sebut setiap not putih C–B sambil menekannya, ulang 3 pusingan. Kemudian tutup mata dan cuba jumpa Middle C.' },
+
+{ n: 2, week: 1, emoji: '🪑', title: 'Postur & Jari Anda',
+  goal: 'Belajar duduk betul dan memberi "nama nombor" kepada jari — bahasa yang digunakan dalam semua pelajaran piano.',
+  secs: [
+    { h: 'Duduk macam professional', body:
+      '<ul><li><b>Tinggi kerusi:</b> lengan anda selari dengan lantai apabila tangan diletakkan atas kekunci.</li>' +
+      '<li><b>Jarak:</b> duduk di hadapan Middle C, bukan di hujung kanan keyboard.</li>' +
+      '<li><b>Kaki:</b> rata di lantai. Belakang tegak tapi bahu <b>relax</b>.</li>' +
+      '<li><b>Tangan:</b> bayangkan memegang sebiji oren — kepalan lembut, jari melengkung semula jadi.</li></ul>' },
+    { h: 'Jari ada nombor', body:
+      '<p>Kedua-dua tangan: ibu jari = <b>1</b>, telunjuk = <b>2</b>, tengah = <b>3</b>, manis = <b>4</b>, kelingking = <b>5</b>. Nombor jari sentiasa ditulis dari sudut pandangan <i>tangan itu sendiri</i> — jadi jari 1 tangan kanan dan jari 1 tangan kiri adalah ibu jari masing-masing.</p>' +
+      '<p>Lagu paling ringkas untuk "membangunkan" jari: <b>5-not</b> — C D E F G naik, dan G F E D C turun, dengan jari 1 2 3 4 5.</p>' },
+    { h: 'Latihan 5-not', body:
+      '<p>Tekan "Main" dan lihat jari mana yang patut digunakan. Kemudian lakukan sendiri dengan tangan kanan, selepas itu tangan kiri.</p>',
+      w: { t: 'scale', notes: ['C4','D4','E4','F4','G4','F4','E4','D4','C4'], label: 'Latihan 5-not (jari 1-2-3-4-5-4-3-2-1)', fingers: '1-2-3-4-5-4-3-2-1' } }
+  ],
+  practice: 'Latihan (15 minit): 5-not tangan kanan ×5, tangan kiri ×5. Perlahan, jari melengkung, pergelangan tangan relax — kelajuan datang kemudian.' },
+
+{ n: 3, week: 1, emoji: '🪜', title: 'Skala C Major — Tangga Muzik Anda',
+  goal: 'Kuasai skala yang paling penting untuk beginner — dan faham formula yang membina semua skala lain.',
+  secs: [
+    { h: 'Apa itu skala?', body:
+      '<p>Skala ialah "tangga" not yang disusun ikut urutan. <b>Skala C Major</b> ialah skala paling mudah di dunia: semua not putih sahaja — <b>C D E F G A B C</b>.</p>' +
+      '<p>Formula? Jarak antara not dinamakan <b>semitone</b> (kekunci bersebelahan, termasuk hitam) dan <b>whole tone</b> (jarak 2 semitone). Major scale formula: <b>W-W-H-W-W-W-H</b>.</p>' +
+      '<ul><li>C→D : whole (lepasi C#)</li><li>D→E : whole</li><li>E→F : half (tak ada kekunci hitam di antara!)</li><li>…dan seterusnya ikut formula.</li></ul>' },
+    { h: 'Main skala naik & turun', body:
+      '<p>Tekan main dan lihat not menyala satu persatu. Perhatikan: <b>pattern jari sama setiap kali</b> — itu rahsia kelajuan.</p>',
+      w: { t: 'scale', notes: ['C4','D4','E4','F4','G4','A4','B4','C5','B4','A4','G4','F4','E4','D4','C4'], label: 'Skala C Major (naik & turun)' } },
+    { h: 'Kenapa penting?', body:
+      '<p>90% lagu yang anda suka dibina dari not-not dalam skala ini. Hafal "rasa" skala C dan anda akan kenali bila mana-mana not "sesat" daripada lagu.</p>' }
+  ],
+  practice: 'Latihan (15 minit): Skala C tangan kanan naik-turun ×5, perlahan dan <b>sama rata</b> (setiap not sama panjang). Buat masa ini belum perlu tangan kiri lagi.' },
+
+{ n: 4, week: 1, emoji: '🤝', title: 'Dua Tangan Berpasangan',
+  goal: 'Mula gabungkan tangan — kemahiran paling "dibenci" beginner, tapi hari ini kita buat ia mudah.',
+  secs: [
+    { h: 'Tangan kiri: mirror image', body:
+      '<p>Tangan kiri main peranan yang sama, cuma di kawasan kiri Middle C. Latihan 5-not tangan kiri: <b>C3 D3 E3 F3 G3</b> dengan jari 5-4-3-2-1 (mirror dari tangan kanan).</p>' },
+    { h: 'Teknik "gelombang"', body:
+      '<p>Jangan main kedua-dua tangan serentak dari mula. Ikut urutan ini:</p>' +
+      '<ol><li>Tangan kanan bersendirian — sampai lancar.</li>' +
+      '<li>Tangan kiri bersendirian — sampai lancar.</li>' +
+      '<li>Kedua-dua tangan, <b>separuh kelajuan</b>. Beri diri anda masa — otak perlu membina "wayar" baru!</li></ol>' },
+    { h: 'Latihan koordinasi', body:
+      '<p>Main 5-not kedua-dua tangan serentak. Perlahan. Jika tersilap, berhenti dan ulang langkah tadi — itu bukan kegagalan, itu cara belajar.</p>',
+      w: { t: 'scale', notes: ['C3','D3','E3','F3','G3'], label: 'LH 5-not (C3)', desc: 'Tangan kiri dulu, kemudian gabung dengan RH' } }
+  ],
+  practice: 'Latihan (15 minit): RH skala ×3, LH skala ×3, kemudian kedua tangan 5-not serentak ×5 — dengan tempo perlahan.' },
+
+{ n: 5, week: 1, emoji: '🥁', title: 'Rentak & Tempo',
+  goal: 'Muzik bukan sekadar not — ia adalah not yang tepat pada masa yang tepat. Hari ini kita kawal masa.',
+  secs: [
+    { h: 'Beat, BPM, dan kiraan', body:
+      '<p><b>Beat</b> ialah degupan muzik — seperti degupan jantung lagu. <b>BPM</b> (beats per minute) menyatakan kelajuan: 60 BPM = 1 beat sesaat.</p>' +
+      '<p>Untuk kebanyakan lagu pop, kita kira setiap bar kepada <b>1-2-3-4</b> (4/4 time — "empat-empat"). Metronome di bawah akan "mengetuk" untuk anda.</p>' },
+    { h: 'Metronome interaktif', body:
+      '<p>Set kelajuan, tekan main, dan kira kuat-kuat "1-2-3-4". Ketukan pertama setiap bar berbunyi lebih tinggi — itu beat 1.</p>',
+      w: { t: 'metro', bpm: 80 } },
+    { h: 'Peraturan emas latihan', body:
+      '<div class="tip"><b>Peraturan emas:</b> kelajuan yang <i>perfect perlahan</i> mengalahkan kelajuan yang huru-hara. Naikkan BPM hanya bila boleh main tanpa silap 3 kali berturut-turut.</div>' }
+  ],
+  practice: 'Latihan (15 minit): Main latihan 5-not dengan metronome: 60 BPM, naik ke 70, 80. Jika tersilap, balik ke kelajuan sebelumnya.' },
+
+{ n: 6, week: 1, emoji: '🎵', title: 'Melodi Pertama Anda',
+  goal: 'Hari kebangkitan! Anda akan main lagu PERTAMA anda — Mary Had a Little Lamb — hanya dengan 3 not.',
+  secs: [
+    { h: 'Hanya 3 not', body:
+      '<p>Mary Had a Little Lamb hanya menggunakan <b>C, D dan E</b> (plus satu G). Jika anda sudah buat latihan 5-not, tangan anda sudah tahu jalan ini!</p>' +
+      '<p>Petua membaca melodi: not bertema berulang. Baris pertama: <b>E D C D | E E E</b> — "Ma-ry had a lit-tle lamb". Perhatikan pattern simetri.</p>' },
+    { h: 'Main bersama player', body:
+      '<p>Tekan Main — kekunci akan menyala ikut melodi, dan jalur not di bawah menunjukkan urutan. Ikut dengan mata dulu, kemudian main bersama.</p>',
+      w: { t: 'song', id: 'mary' } },
+    { h: 'Cara menghafal dengan pantas', body:
+      '<p>Pecahkan lagu kepada frasa 4 bar. Lengkapkan frasa 1 sebelum pindah ke frasa 2. Lagu = 4 frasa pendek, bukan 30 not panjang!</p>' }
+  ],
+  practice: 'Latihan (20 minit): Main Mary Had a Little Lamb dengan tangan kanan, 3 kali berturut-turut tanpa silap, ikut metronome 80 BPM jika boleh.' },
+
+{ n: 7, week: 1, emoji: '✅', title: 'Ujian Minggu 1',
+  goal: 'Semak kemahiran minggu ini sebelum kita masuk ke dunia chord — tick apa yang sudah anda kuasai.',
+  secs: [
+    { h: 'Senarai semak kemahiran', body:
+      '<p>Tandakan apa yang sudah boleh anda buat. Yang belum, tak apa — ulang hari berkenaan esok. Akses semua hari sentiasa terbuka (self-paced!).</p>',
+      w: { t: 'check', id: 'w1', items: [
+        'Saya boleh nama semua not putih (C D E F G A B) tanpa tengok nota',
+        'Saya jumpa Middle C dalam 3 saat',
+        'Saya boleh main skala C major tangan kanan tanpa silap',
+        'Saya boleh main 5-not dengan kedua-dua tangan serentak',
+        'Saya boleh main Mary Had a Little Lamb tanpa berhenti'
+      ] } },
+    { h: 'Sudah siap? Raikan!', body:
+      '<div class="tip"><b>Ini bukan kecil!</b> Majoriti orang yang mahu belajar piano berhenti sebelum sampai di sini. Minggu depan anda akan mula bermain <i>chord</i> — sebab sebenar orang boleh main lagu kegemaran mereka.</div>' },
+    { h: 'Malam ini', body:
+      '<p>Anda boleh bebas bermain di keyboard bawah — dengar, cuba, bermain tanpa takut silap. Bermain tanpa nota pun sebahagian daripada belajar.</p>',
+      w: { t: 'freeplay', lo: 'C3', hi: 'C6', mark: [] } }
+  ],
+  practice: 'Latihan (20 minit): Ulang mana-mana hari minggu ini yang paling anda perlukan + bebas bermain 5 minit.' },
+
+/* ================= MINGGU 2 — DUNIA CHORD ================= */
+{ n: 8, week: 2, emoji: '🧱', title: 'Apa Itu Chord?',
+  goal: 'Hari ini rahsia muzik pop dibuka: chord. Anda akan main chord PERTAMA anda dan faham cara ia dibina.',
+  secs: [
+    { h: 'Satu chord = 3 not ditekan serentak', body:
+      '<p><b>Chord</b> ialah sekumpulan not dimainkan bersama — "blok bangunan" lagu. Sambil penyanyi menyanyi melodi, pemain keyboard menyokong dengan chord. Kuasai chord, dan anda boleh main hampir semua lagu pop.</p>' +
+      '<p>Chord paling biasa ialah <b>triad</b>: 3 not. Formula Major triad dari root: <b>+4 semitone, kemudian +3 semitone</b>.</p>' +
+      '<p>Contoh, C Major: mula dari C → naik 4 semitones (lepasi C#, D, D#) → sampai <b>E</b> → naik 3 lagi → <b>G</b>. Jadi C major = <b>C + E + G</b>.</p>' },
+    { h: 'Main chord pertama anda', body:
+      '<p>Tekan butang — tiga not akan menyala dan berbunyi bersama. Itu bunyi <b>C major</b> — bunyi paling "gembira" dalam muzik Barat.</p>',
+      w: { t: 'chord', syms: ['C'], label: 'Chord C Major — C E G (jari 1-3-5)' } },
+    { h: 'Kuasai chord', body:
+      '<p>Main C major dengan jari tangan kanan: <b>1 (ibu jari) di C, 3 di E, 5 di G</b>. Tekan-lepas-tekan-lepas 10 kali. Rasakan bentuknya — bentuk inilah yang anda akan "membawa" ke semua tempat keyboard.</p>' }
+  ],
+  practice: 'Latihan (15 minit): Chord C major, tangan kanan 1-3-5, tekan-lepas ×10, kemudian cuba tanpa tengok tangan.' },
+
+{ n: 9, week: 2, emoji: '🔑', title: 'Tiga Chord Emas: C, F, G',
+  goal: 'Dengan 3 chord ini sahaja, anda boleh main ratusan lagu. Ya, betul — tiga.',
+  secs: [
+    { h: 'Keluarga Key of C', body:
+      '<p>Lagu dalam "key of C" lazimnya membina dari 3 chord utama: <b>C</b> (rumah / I), <b>F</b> (IV) dan <b>G</b> (V). Ahli muzik memanggilnya "three-chord song" — dan anda sudah pun boleh membina banyak lagu tradisional dan pop klasik dengannya.</p>' +
+      '<ul><li><b>C</b> = C E G</li><li><b>F</b> = F A C</li><li><b>G</b> = G B D</li></ul>' +
+      '<p>Perhatikan: bentuk jari <i>hampir sama</i>, cuma berpindah. Jari anda akan menghafal "jalan" ini.</p>' },
+    { h: 'Tiga chord, satu skrin', body:
+      '<p>Klik setiap butang chord — kekunci menyala menunjukkan not. Kemudian tekan "Main ketiga-tiga" untuk dengar urutan C → F → G → C (bunyi "pulang ke rumah").</p>',
+      w: { t: 'chord', syms: ['C', 'F', 'G'], label: 'Tiga Chord Emas' } },
+    { h: 'Latihan peralihan', body:
+      '<div class="tip"><b>Drill peralihan:</b> main C → F → C → G → C, ulang-ulang. Pergeseran silap di <i>antara</i> chord — bukan pada chord. Fokus memandang not SEA yang mahu didatangi, bukan tangan anda sekarang.</div>' }
+  ],
+  practice: 'Latihan (20 minit): Kitaran C-F-C-G-C ×10 perlahan. Matlamat: bertukar chord tanpa berhenti.' },
+
+{ n: 10, week: 2, emoji: '🌧️', title: 'Chord Minor: Am, Dm, Em',
+  goal: 'Kuasai "senyap sedih" muzik — chord minor — dan dengar beza besar daripada 1 semitones sahaja.',
+  secs: [
+    { h: 'Major = ceria, Minor = pilu', body:
+      '<p>Beza C major dan C minor hanyalah <b>satu semitones</b> (E → Eb), tetapi perasaan berubah sepenuhnya. Itulah kuasa chord: formula kecil, kesan emosi besar.</p>' +
+      '<p>Formula minor triad: <b>+3 semitones, kemudian +4</b> — songsang daripada major.</p>' +
+      '<p>Dalam key of C, chord minor yang penting: <b>Am</b> (A C E), <b>Dm</b> (D F A), <b>Em</b> (E G B).</p>' },
+    { h: 'Banding sendiri', body:
+      '<p>Main C, kemudian Am. Dengar bagaimana satu not berubah (E→E? no — tengok jari: C E G → A C E, "rumah" sama tapi rasa lain!). Uji setiap chord minor di bawah.</p>',
+      w: { t: 'chord', syms: ['C', 'Am', 'F', 'Dm', 'G', 'Em'], label: 'Major vs Minor — dengar beza' } },
+    { h: 'Mengapa belajar minor sekarang?', body:
+      '<p>Kerana hampir tiada lagu hit yang major sahaja. Chorus gembira, verse emosi — campuran major + minor itulah resepinya. Besok anda akan main progression yang mengandungi semua ini.</p>' }
+  ],
+  practice: 'Latihan (15 minit): Main Am, Dm, Em ×5 setiap satu, kemudian urutan C-Am-F-G ×5.' },
+
+{ n: 11, week: 2, emoji: '⭐', title: 'Progression Paling Popular di Dunia',
+  goal: 'Hari ini anda main I–V–vi–IV (C-G-Am-F) — progression yang membuatkannya ratusan lagu hit terkenal.',
+  secs: [
+    { h: 'Formula ajaib', body:
+      '<p>Chord <b>progression</b> = urutan chord yang berulang mengikut rentak. Dan progression ini: <b>I–V–vi–IV</b> dalam key of C = <b>C → G → Am → F</b>.</p>' +
+      '<p>Lagu yang menggunakannya (atau versi saudaranya vi–IV–I–V): "Let It Be", "Someone Like You", "Someone You Loved", "No Woman No Cry", berpuluh lagu Melayu pop & evergreen… Ramai orang memanggilnya <b>"progression 4 chord"</b>.</p>' },
+    { h: 'Main progression ini', body:
+      '<p>Progression player di bawah memainkan C-G-Am-F berulang, dengan kekunci menyala mengikut chord. Tukar "pattern" untuk dengar iringan berlainan. Cuba juga <b>versi iringan</b>: block chord dulu, kemudian pattern.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'block', bpm: 80, loop: 8 } },
+    { h: 'Nyanyi atasnya', body:
+      '<div class="tip"><b>Ujian telinga:</b> main progression ini dan cuba nyanyi lagu kegemaran anda di atasnya. Hampa jadi C-G-Am-F adalah bahasa muzik pop sejagat — kebanyakan melodi akan muat dengan achaun yang mengejutkan.</div>' }
+  ],
+  practice: 'Latihan (20 minit): Main C-G-Am-F dengan tangan kanan, 8 pusingan tanpa berhenti. Kemudian cuba nyanyi sebaris lagu kesukaan di atasnya.' },
+
+{ n: 12, week: 2, emoji: '🎹', title: 'Tangan Kiri Menyokong',
+  goal: 'Mula bunyi macam dua orang bermain: tangan kanan chord/melodi, tangan kiri menyokong dengan bass.',
+  secs: [
+    { h: 'Pembahagian kerja', body:
+      '<p>Resepi standard pemain keyboard:</p>' +
+      '<ul><li><b>Tangan kiri:</b> main root chord (not nama chord) di oktaf rendah — memberikan "bumi".</li>' +
+      '<li><b>Tangan kanan:</b> chord penuh — memberikan "badan".</li></ul>' +
+      '<p>Contoh untuk chord C: LH main <b>C3</b> (atau C2), RH main <b>C4 E4 G4</b>.</p>' },
+    { h: 'Pattern "boom-chick"', body:
+      '<p>Pattern paling asas dan paling digunakan: <b>boom</b> (tangan kiri root) pada beat 1 & 3, <b>chick</b> (chord tangan kanan) pada beat 1-2-3-4 atau 2 & 4. Player di bawah menunjukkan versi 8-nota pop.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'beat8', bpm: 80, loop: 8 } },
+    { h: 'Jangan tengok tangan', body:
+      '<div class="tip"><b>Tip:</b> tangan kiri hanya perlu "melompat" antara beberapa root sahaja. Hafal jarak: C→G jauh sikit, G→Am dekat, Am→F dekat. Sekali otot anda menghafal, mata bebas untuk baca lirik atau sheet!</div>' }
+  ],
+  practice: 'Latihan (20 minit): LH root + RH chord untuk C-G-Am-F, 8 pusingan. Perlahan dulu, kemudian 80 BPM.' },
+
+{ n: 13, week: 2, emoji: '🔄', title: 'Inversions — Jalan Pintas Chord',
+  goal: 'Berhenti melompat seluruh keyboard! Inversion membolehkan tangan anda bergerak minimum tetapi chord tetap bertukar.',
+  secs: [
+    { h: 'Chord yang sama, susunan berbeza', body:
+      '<p><b>Inversion</b> = susunan not chord yang berbeza. C major = C E G, tetapi boleh juga dimainkan <b>E G C</b> (1st inversion) atau <b>G C E</b> (2nd inversion). Bunyinya tetap "chord C" — hanya "warna" dan kedudukan berbeza.</p>' },
+    { h: 'Mengapa ia hebat?', body:
+      '<p>Bayangkan main C → F tanpa inversion: tangan melompat jauh. Dengan inversion, main C (C E G) → <b>F/C</b> (C F A) — hampir tak bergerak! Ahli piano menggunakan inversion untuk <b>peralihan licin</b>.</p>' },
+    { h: 'Lihat & dengar', body:
+      '<p>Butang di bawah menunjukkan C, C/E dan C/G — chord sama, susunan lain. Kemudian cuba pasangan "licin": C → C/E → C/G.</p>',
+      w: { t: 'chord', syms: ['C', 'C/E', 'C/G', 'F/C', 'G/B'], label: 'Chord & inversions' } },
+    { h: 'Jalan licin C-G-Am-F', body:
+      '<p>Versi inversion untuk progression kegemaran kita: C → <b>G/B</b> → <b>Am</b> → <b>F/C</b>. Perhatikan betapa kecilnya pergerakan tangan. Ini rahsia bunyi "pro".</p>',
+      w: { t: 'prog', chords: ['C','G/B','Am','F/C'], pattern: 'block', bpm: 80, loop: 4 } }
+  ],
+  practice: 'Latihan (20 minit): Main C-G-Am-F versi inversion ×5. Rasakan beza "melompat" vs "licin".' },
+
+{ n: 14, week: 2, emoji: '✅', title: 'Ujian Minggu 2',
+  goal: 'Sahkan kemahiran chord anda — ini kemahiran yang membuka pintu ke hampir semua lagu pop.',
+  secs: [
+    { h: 'Play-along ujian', body:
+      '<p>Main bersama progression di bawah dengan tangan kanan (chord) atau dua tangan (root + chord). Ikut seberapa banyak pusingan yang anda mampu.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'beat8', bpm: 90, loop: 8 } },
+    { h: 'Senarai semak', body:
+      '<p>Tandakan kemahiran yang sudah ada. Jika ada yang belum, ulang hari tersebut esok — semua orang mengikut rentak sendiri.</p>',
+      w: { t: 'check', id: 'w2', items: [
+        'Saya boleh main 6 chord: C, F, G, Am, Dm, Em tanpa tengok nota',
+        'Saya tahu beza bunyi major vs minor',
+        'Saya boleh main progression C-G-Am-F tanpa berhenti',
+        'Saya boleh main LH root + RH chord serentak',
+        'Saya faham apa itu inversion dan bila ia berguna'
+      ] } },
+    { h: 'Antara anda dan main lagu…', body:
+      '<div class="tip"><b>Minggu depan:</b> kita gabungkan semua ini dengan <i>melodi</i>. Anda sudah memiliki "kereta" (chord) — sekarang kita pasang "enjin" (lagu penuh).</div>' }
+  ],
+  practice: 'Latihan (20 minit): Ulang hari paling lemah minggu ini + play-along progression 5 minit.' },
+
+/* ================= MINGGU 3 — MAIN LAGU KESESUKAAN ================= */
+{ n: 15, week: 3, emoji: '📜', title: 'Baca Lead Sheet & Chord Chart',
+  goal: 'Belajar "peta" lagu — supaya mana-mana lagu baru hanya ambil 2 minit untuk faham.',
+  secs: [
+    { h: 'Dua cara membaca muzik', body:
+      '<p><b>Nota staf</b> (sheet music klasik) — tepat, tetapi lambat dipelajari. <b>Lead sheet / chord chart</b> — cuma tulis nama chord + lirik. Inilah cara pemain pop, band wedding dan pemain bar bermain ratusan lagu.</p>' +
+      '<p>Kerana anda sudah tahu chord, anda boleh baca chord chart SEKARANG.</p>' },
+    { h: 'Anatomi lagu', body:
+      '<ul><li><b>Intro</b> — pembuka (biasanya progression sama dengan verse)</li>' +
+      '<li><b>Verse</b> — bahagian bercerita (lazimnya lebih tenang)</li>' +
+      '<li><b>Chorus</b> — bahagian "top" lagu, diulang (lazimnya paling emosional)</li>' +
+      '<li><b>Bridge</b> — kejutan sebelum chorus terakhir</li></ul>' +
+      '<p>Sekarang, apabila anda dengar lagu, cuba dengar bila ia "bertukar bahagian" — itu bila chord bertukar pattern.</p>' },
+    { h: 'Chord chart pertama anda', body:
+      '<p>Di bawah ialah "chart" lagu contoh. Main dan dengar strukturnya: setiap bar = 4 beat, setiap chord sebaris. Notasi chart yang sama digunakan oleh pemain profesional.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'block', bpm: 80, loop: 4, chartTitle: 'Contoh chart — Verse: C G Am F (×4)' } }
+  ],
+  practice: 'Latihan (15 minit): Pilih satu lagu kegemaran, cari chord chart dia di internet (cuba cari "chord [nama lagu]"), dan lihat berapa banyak chord yang anda sudah tahu!' },
+
+{ n: 16, week: 3, emoji: '✨', title: 'Teknik Melodi + Chord',
+  goal: 'Hari ini anda main lagu dengan "penuh": melodi tangan kanan, chord/root tangan kiri.',
+  secs: [
+    { h: 'Resepi lengkap', body:
+      '<p>Inilah formula pemain solo keyboard:</p>' +
+      '<ul><li><b>Tangan kanan:</b> melodi lagu (not demi not)</li>' +
+      '<li><b>Tangan kiri:</b> root chord atau chord penuh mengikut progression lagu</li></ul>' +
+      '<p>Kedengaran seperti dua orang bermain — tetapi hanya anda seorang. Teknik ini dipanggil <i>melody + accompaniment</i>.</p>' },
+    { h: 'Cuba dengan Ode to Joy', body:
+      '<p>Main melodi Ode to Joy dengan tangan kanan. Untuk tangan kiri, main root chord: C… G… — cukup. Player menunjukkan melodi; progression di bawah sebagai contoh iringan.</p>',
+      w: { t: 'song', id: 'ode' } },
+    { h: 'Tangan kiri ikut deria', body:
+      '<div class="tip"><b>Tip:</b> jangan bersusah payah menghafal chord setiap melodi — dengar bila terasa "bertukar rumah" di melodi, dan tukar chord saat itu. Untuk kebanyakan lagu, bertukar tiap 4 beat (satu bar).</div>' }
+  ],
+  practice: 'Latihan (20 minit): Ode to Joy RH melodi + LH root (C, G, C…). Perlahan, kemudian naik tempo.' },
+
+{ n: 17, week: 3, emoji: '💃', title: 'Pattern Pop 8-Beat',
+  goal: 'Berikan lagu anda denyut pop sebenar — pattern yang digunakan dalam beribu-ribu lagu.',
+  secs: [
+    { h: 'Dari "block" ke "alive"', body:
+      '<p>Block chord (semua not serentak) berbunyi kaku. Pattern 8-beat memecahkan chord kepada 8 not setiap bar: <b>tum-tum-tum-tum</b> berterusan seperti jantung lagu pop.</p>' +
+      '<p>Formula LH: root pada beat 1 & 3 ("boom"), chord pada beat 2 & 4 ("chick") — atau versi 8-nota penuh di player bawah.</p>' },
+    { h: 'Dengar pattern ini', body:
+      '<p>Player di bawah bermain C-G-Am-F dengan pattern 8-beat. Dengar bagaimana progression yang sama tiba-tiba berbunyi seperti lagu radio!</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'beat8', bpm: 90, loop: 8 } },
+    { h: 'Lagu yang pakai pattern ini', body:
+      '<p>Hampir semua pop ballad: "Let It Be", "Someone Like You", majoriti lagu M Nasir, Ella, Siti Nurhaliza yang tempo sederhana. Pattern yang sama — hanya kelajuan dan chord berbeza.</p>' }
+  ],
+  practice: 'Latihan (20 minit): Main C-G-Am-F dengan pattern 8-beat sendiri (LH boom-chick + RH chord), 100 BPM matlamat akhir minggu.' },
+
+{ n: 18, week: 3, emoji: '🫧', title: 'Pattern Ballad & Waltz',
+  goal: 'Belajar "rasa" 3-beat waltz dan pattern ballad lembut — warna baru untuk lagu anda.',
+  secs: [
+    { h: 'Waltz: 1-2-3, 1-2-3', body:
+      '<p>Waltz dikira dalam <b>3/4</b> — tiga beat setiap bar: <b>BERAT</b>-lembut-lembut. Pattern: root dalam pada beat 1, chord pada beat 2 dan 3. Rasanya melayang, seperti kitaran zaman dulu.</p>' +
+      '<p>Lagu waltz yang anda mungkin kenali: "Blue Danube", "Tennessee Waltz", majoriti lagu klasik Melayu asli seperti "Cenderawasih" dan rumba-rumba era P. Ramlee.</p>' },
+    { h: 'Main waltz', body:
+      '<p>Progression yang sama (C-G-Am-F) tetapi kali ini dalam rasa waltz. Dengar beza besar yang dibuat oleh <i>kiraan</i> sahaja!</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'waltz', bpm: 90, loop: 8 } },
+    { h: 'Ballad lembut 6/8', body:
+      '<p>Untuk lagu sangat emosi (contoh "Perfect" — Ed Sheeran), rasa 6/8: kira <b>1-2-3-4-5-6</b> dengan penekanan pada 1 dan 4. Pattern ballad: LH root + chord, tetapi dibuat lembut dan berlegar. Ia seperti waltz yang berlari dua kali lebih laju tapi lebih sepoi.</p>' }
+  ],
+  practice: 'Latihan (20 minit): Waltz LH root-chord-chord untuk C-G-Am-F ×5, kemudian cuba main pola sama atas lagu mana-mana lagu 3-beat yang anda tahu.' },
+
+{ n: 19, week: 3, emoji: '🎨', title: 'Sus Chords & Warna',
+  goal: 'Tambah "bumbuk" pada chord anda — sus2 dan sus4, garam & gula muzik pop.',
+  secs: [
+    { h: 'Chord yang "tergantung"', body:
+      '<p><b>Sus</b> = suspended: gantikan not ke-3 chord dengan not ke-4 (sus4) atau ke-2 (sus2), menghasilkan bunyi "tergantung" yang menagih penyelesaian.</p>' +
+      '<ul><li><b>Csus4</b> = C F G — bunyi "terbuka", sering di akhir frase</li>' +
+      '<li><b>Csus2</b> = C D G — bunyi moden/misty, kegemaran pemain pop & film score</li></ul>' },
+    { h: 'Cuba & banding', body:
+      '<p>Main C, kemudian Csus4, kemudian balik C. Dengar bagaimana sus "bertanya" dan chord asal "menjawab". Trick yang sama dengan Gsus4 → G.</p>',
+      w: { t: 'chord', syms: ['C', 'Csus4', 'Csus2', 'Gsus4', 'G'], label: 'Sus chords — dengar rasa tergantung' } },
+    { h: 'Bila guna sus?', body:
+      '<ul><li>Pada akhir baris lagu (sebelum pulang ke chorus)</li>' +
+      '<li>Untuk "mengisi" saat pemain berhenti sekejap</li>' +
+      '<li>Ganti chord asal pada verse untuk rasa lebih modern</li></ul>' +
+      '<p>Contoh terkenal: intro "Pinball Wizard", "Summer of 69", banyak intro rock klasik.</p>' }
+  ],
+  practice: 'Latihan (15 minit): Main C-G-Am-F, tetapi tukar chord terakhir setiap pusingan kepada sus dan balik. Main "licin" tanpa berhenti.' },
+
+{ n: 20, week: 3, emoji: '🚚', title: 'Transpose — Tukar Key',
+  goal: 'Belajar pindahkan lagu ke key lain — supaya muat dengan suara anda atau penyanyi rakan.',
+  secs: [
+    { h: 'Mengapa tukar key?', body:
+      '<p>Suara manusia ada julat berbeza. Lagu asal mungkin terlalu tinggi/rendah untuk anda nyanyikan. <b>Transpose</b> = alihkan semua chord dengan jarak yang sama, mengubah key tanpa mengubah lagu.</p>' +
+      '<p>Kebaikan untuk pemain keyboard: <b>bentuk jari dan pattern TIDAK berubah</b> — hanya kedudukan berpindah. Kuasai progression di satu key, dan anda punyainya di SEMUA key.</p>' },
+    { h: 'C → G: contoh klasik', body:
+      '<p>Progression C-G-Am-F dipindahkan ke key of G: setiap chord naik 7 semitones. Hasilnya: <b>G → D → Em → C</b>. Player di bawah memainkan kedua-dua — dengar lagunya "sama", cuma lebih tinggi.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F','G','D','Em','C'], pattern: 'block', bpm: 80, loop: 4, splitLabels: ['Key of C', 'Key of G'] } },
+    { h: 'Cara transpose dalam kepala', body:
+      '<ol><li>Kenal jarak: C→G = 7 semitones ke atas (atau 5 ke bawah)</li>' +
+      '<li>Tukar root setiap chord dengan jarak sama</li>' +
+      '<li>Kualiti chord kekal (Am dalam C → Em dalam G, kerana kedua-duanya vi)</li></ol>' }
+  ],
+  practice: 'Latihan (15 minit): Main C-G-Am-F di key of G (G-D-Em-C) ×5. Kemudian cuba key of F (F-C-Dm-Bb — ok, Bb sedikit mencabar, lompat dulu jika mahu).' },
+
+{ n: 21, week: 3, emoji: '✅', title: 'Ujian Minggu 3',
+  goal: 'Gabungkan segalanya: melodi, chord, pattern — dan sahkan bahawa anda boleh main lagu penuh.',
+  secs: [
+    { h: 'Lagu ujian: Happy Birthday', body:
+      '<p>Lagu yang setiap orang perlukan! Main melodi dengan RH, dan LH root chord (C, F, G, C mengikut frasa). Player menyala ikut not.</p>',
+      w: { t: 'song', id: 'happy' } },
+    { h: 'Play-along pattern', body:
+      '<p>Pilih pattern kegemaran anda (block, 8-beat atau waltz) dan main bersama backing C-G-Am-F di bawah — dengan chord penuh dua tangan.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'beat8', bpm: 90, loop: 8 } },
+    { h: 'Senarai semak minggu 3', body:
+      '<p>Tandakan kemahiran yang sudah stabil:</p>',
+      w: { t: 'check', id: 'w3', items: [
+        'Saya boleh main melodi + LH chord root serentak',
+        'Saya boleh main pattern 8-beat dengan kedua-dua tangan',
+        'Saya boleh main rasa waltz (1-2-3)',
+        'Saya tahu bila dan macam mana guna sus chord',
+        'Saya boleh pindahkan C-G-Am-F ke key of G'
+      ] } }
+  ],
+  practice: 'Latihan (25 minit): Happy Birthday penuh (RH melodi + LH root) ×3, kemudian play-along pattern pilihan anda 10 minit.' },
+
+/* ================= MINGGU 4 — POLISH & REPERTOIR ================= */
+{ n: 22, week: 4, emoji: '🦶', title: 'Pedal Sustain',
+  goal: 'Teknik yang membezakan bunyi "mesin taip" daripada bunyi "penaik mudik" — pedal kanan.',
+  secs: [
+    { h: 'Tiga pedal, satu yang penting', body:
+      '<p>Piano acoustic ada 3 pedal, tetapi 90% masa anda hanya guna <b>pedal kanan (sustain)</b>: mengangkat semua "damper" supaya not terus bergetar selepas jari dilepaskan — bunyi menjadi legap, sepoi, menyambung.</p>' +
+      '<p>Keyboard elektronik: cari butang "Sustain" atau sambung pedal yang dijual berasingan. Jika tiada — tidak menghalang pelajaran hari ini, cuma kurang "rasa".</p>' },
+    { h: 'Peraturan pedal: bertukar BUKAN menekan', body:
+      '<p>Kesilapan paling biasa beginner: pedal ditekan terus-menerus, semua not bercampur jadi sop santan! Peraturan: <b>angkat & tekan semula pedal pada setiap pertukaran chord</b> — tepat ketika chord baru dimainkan. Ini dipanggil "syncopated pedaling".</p>' },
+    { h: 'Legato vs staccato — dengar beza', body:
+      '<p>Player di bawah main pattern arpeggio: kali pertama bayangkan "dengan pedal" (not menyambung lembut) — kali kedua "tanpa pedal" (not putus). Dengan pedal, arpeggio berubah menjadi ombak.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'arp', bpm: 70, loop: 8, pedalHint: true } }
+  ],
+  practice: 'Latihan (15 minit): Jika keyboard/piano anda ada pedal atau butang sustain: main C-G-Am-F pattern arp + tukar pedal setiap chord. Rasakan beza.' },
+
+{ n: 23, week: 4, emoji: '🌊', title: 'Dynamics & Ekspresi',
+  goal: 'Muzik bermula apabila not bertukar menjadi perasaan — kuat, lembut, membesar, surut.',
+  secs: [
+    { h: 'F, p, crescendo — simbol perasaan', body:
+      '<p><b>f (forte)</b> = kuat. <b>p (piano)</b> = lembut. <b>crescendo</b> = membesar. <b>diminuendo</b> = surut. Muzik tanpa dynamics = robot bercerita dengan satu nada sahaja.</p>' },
+    { h: 'Resepi emosi lagu', body:
+      '<ul><li><b>Verse:</b> lembut (p) — bercerita</li>' +
+      '<li><b>Chorus:</b> kuat (f) — meletup</li>' +
+      '<li><b>Frasa akhir:</b> crescendo ke climax, kemudian surut ke not akhir</li></ul>' +
+      '<p>Anda tidak perlu teknik baru — hanya <i>kelantangan</i> yang dirancang. Beri cerita anda bukit dan lembah.</p>' },
+    { h: 'Awas: jari melaju, kelantangan tertinggal', body:
+      '<div class="tip"><b>Latihan telinga:</b> main skala C naik dengan crescendo (makin lama makin kuat) dan turun dengan diminuendo. Ini latihan paling ringan tetapi paling jarang dibuat beginner — dan pemain pro sentiasa membayangkan bentuk dynamics walaupun berlatih skala.</div>' }
+  ],
+  practice: 'Latihan (15 minit): Main lagu Hari 21 anda (Happy Birthday / progression pilihan) dengan rancangan dynamics: verse lembut, baris akhir crescendo. Rakam dan dengar.' },
+
+{ n: 24, week: 4, emoji: '🌊', title: 'Arpeggio & Broken Chords',
+  goal: 'Pecahkan chord anda kepada ombak — iringan paling indah untuk lagu ballad.',
+  secs: [
+    { h: 'Chord "dipecahkan"', body:
+      '<p>Seharian ini anda main chord sebagai blok. <b>Arpeggio</b> = main not chord tersebut satu demi satu: C… E… G… E… seperti ombak. Bunyi lebih luas dan romantis — keyboard anda tiba-tiba berbunyi seperti piano konsert.</p>' },
+    { h: 'Formula asas arpeggio LH', body:
+      '<ol><li>Not root (C3) — beat 1</li><li>Not ke-3 (E3) — beat 2</li>' +
+      '<li>Not ke-5 (G3) — beat 3</li><li>Naik semula (C4 atau balik ke E) — beat 4</li></ol>' +
+      '<p>Petua: mata lihat <i>chord akan datang</i> sebelum tangan sampai. Sama seperti Hari 13, ini "melihat ke depan".</p>' },
+    { h: 'Dengar arpeggio', body:
+      '<p>Player di bawah memainkan C-G-Am-F dengan pattern arpeggio. Perhatikan not yang dipilih setiap bar — semua dari chord tersebut, hanya dipecahkan mengikut urutan naik-turun.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'arp', bpm: 70, loop: 8 } }
+  ],
+  practice: 'Latihan (20 minit): Main arpeggio LH untuk C-G-Am-F ×8 pusingan, kemudian cuba tambahkan RH melodi lagu mana-mana di atasnya (senang: Happy Birthday).' },
+
+{ n: 25, week: 4, emoji: '🌙', title: 'Repertoir 1 — Ballad',
+  goal: 'Hari ini anda main lagu ballad PENUH — melodi + arpeggio, dari mula hingga tamat.',
+  secs: [
+    { h: 'Lagu latihan: Senja Pertama', body:
+      '<p>Ini lagu asal Piano 30 Hari yang ditulis khas untuk kemahiran anda hari ini: melodi mudah (C major), progression kegemaran kita (C-G-Am-F), dan setiap bar tepat 4 beat. Main RH melodi + LH arpeggio root-not.</p>' },
+    { h: 'Main lagu penuh', body:
+      '<p>Player menyala melodi + chord backing. Dengar <i>keseluruhan</i> lagu dahulu, kemudian belajar mengikut frasa 2 bar. Lirik? Boleh ganti dengan melodi senyuman anda sendiri.</p>',
+      w: { t: 'song', id: 'ballad30' } },
+    { h: 'Peta frasa', body:
+      '<ol><li>Frasa 1 (bar 1-2): soalan</li><li>Frasa 2 (bar 3-4): jawapan</li>' +
+      '<li>Frasa 3-4: sama, penghujung diturunkan — lagu "pulang"</li></ol>' +
+      '<p>Struktur soal-jawab ini ada dalam hampir semua lagu yang pernah anda dengar.</p>' }
+  ],
+  practice: 'Latihan (25 minit): Belajar Senja Pertama mengikut frasa: RH melodi ×3, tambah LH arpeggio, matlamat: penuh 8 bar tanpa berhenti.' },
+
+{ n: 26, week: 4, emoji: '🎉', title: 'Repertoir 2 — Riang',
+  goal: 'Lagu kedua, rasa riang — guna pattern 8-beat untuk bunyi band penuh.',
+  secs: [
+    { h: 'Twinkle Twinkle — jangan dipandang rendah', body:
+      '<p>Lagu kanak-kanak? Ya — tetapi lagu yang sama dipakai oleh Mozart untuk variation terkenalnya! Untuk kita: melodi sudah separuh hafal, jadi fokus boleh diberikan kepada <b>iringan dua tangan</b>.</p>' },
+    { h: 'Main lagu penuh', body:
+      '<p>RH melodi Twinkle Twinkle + LH pattern 8-beat (root-chord ala Hari 17). Player menyala melodi — LH anda ikut progression C, F, C, G… mengikut telinga.</p>',
+      w: { t: 'song', id: 'twinkle' } },
+    { h: 'Naikkan suasana', body:
+      '<div class="tip"><b>Versi persembahan:</b> mulakan dengan block chord (lembut), baris kedua tukar ke 8-beat (kuat), dan baris akhir tambahkan arpeggio naik untuk ending kegemaran penonton.</div>' }
+  ],
+  practice: 'Latihan (25 minit): Twinkle Twinkle penuh dengan iringan dua tangan, kemudian buat "versi persembahan" 3 susunan seperti tip di atas.' },
+
+{ n: 27, week: 4, emoji: '🔥', title: 'Improvisasi Pertama Anda',
+  goal: 'Hari paling menyeronokkan: bermain nota yang TIDAK ditulis oleh sesiapa — nota anda sendiri.',
+  secs: [
+    { h: 'Pentatonic: skala "tak boleh silap"', body:
+      '<p><b>Pentatonic</b> = skala 5 not: <b>C D E G A</b> (buang F dan B — dua not "berbahaya"). Dengan lima not ini, anda <i>hampir mustahil</i> bermain salah di atas chord C, Am atau F. Inilah rahsia improvisasi pemain pop dan budak guitar "solo berakar"<i> kampung tetapi syok</i>.</p>' },
+    { h: 'Main bebas di atas backing', body:
+      '<p>Backing C-G-Am-F bermain di bawah. Tugas anda: main not pentatonic (yang diserlahkan) secara bebas — melompat, berhenti, ulang, turun. Tidak ada not yang salah, hanya not yang belum anda dengar!</p>',
+      w: { t: 'jam', chords: ['C','G','Am','F'], pattern: 'beat8', bpm: 80, notes: ['C4','D4','E4','G4','A4','C5'] } },
+    { h: 'Formula improvisasi untuk pemula', body:
+      '<ol><li>Mula dengan 3 not sahaja (C, E, G) — buat irama dengan salah satu</li>' +
+      '<li>Tambah not ke-4 (D atau A) sebagai "jambatan"</li>' +
+      '<li>Buat soalan-jawapan: frasa pendek, berhenti, "jawab" sendiri</li>' +
+      '<li>Selalu kembali ke root (C) selepas beberapa not — itu "rumah"</li></ol>' }
+  ],
+  practice: 'Latihan (20 minit): Jam bersama backing 5 minit tanpa berhenti. Rakam sekali — dengar balik — anda mungkin akan terkejut betapa muziknya bunyi!' },
+
+{ n: 28, week: 4, emoji: '⏱️', title: 'Rutin Latihan Yang Betul',
+  goal: 'Bina rutin 20 minit yang lebih berkesan daripada 2 jam main sembarangan.',
+  secs: [
+    { h: 'Formula 5-5-10', body:
+      '<p>Rutin latihan profesional (sesuai untuk semua peringkat):</p>' +
+      '<ul><li><b>5 minit warm-up:</b> skala C + latihan 5-not kedua tangan</li>' +
+      '<li><b>5 minit teknik:</b> satu kemahiran sahaja (hari ini: peralihan chord pantas)</li>' +
+      '<li><b>10 minit lagu:</b> main repertoir anda dengan matlamat kecil (hari ini: frasa licin)</li></ul>' +
+      '<p>Konsistensi mengalahkan durasi: 20 minit setiap hari > 3 jam sekali seminggu.</p>' },
+    { h: 'Drill: peralihan pantas', body:
+      '<p>Player bawah bermain C-G-Am-F pada 100 BPM. Main chord RH bersama backing — matlamat: <b>berkunci tepat pada beat</b>, bukan sedikit selepas. Jika ketinggalan, turun ke 80.</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'block', bpm: 100, loop: 8 } },
+    { h: 'Kalendar anda', body:
+      '<div class="tip"><b>Tip momentum:</b> tetapkan masa yang SAMA setiap hari (contoh: selepas solat/makan malam, sebelum tidur). Kekonkritan masa mengalahkan motivasi. Guna progress bar di atas halaman ini sebagai penjejak mingguan anda!</div>' }
+  ],
+  practice: 'Latihan (20 minit): Buat rutin 5-5-10 penuh HARI INI — dengan jam di sebelah. Esok, masa yang sama.' },
+
+{ n: 29, week: 4, emoji: '🎤', title: 'Rakam & Nilai Diri Anda',
+  goal: 'Mata telinga paling jujur: rakaman. Hari ini anda juri untuk diri sendiri.',
+  secs: [
+    { h: 'Rakam dengan telefon sahaja', body:
+      '<p>Tidak perlu peralatan: letakkan telefon di atas meja (bukan atas piano — getarannya terlalu kuat), jarak 1 meter, mode audio/video. Main lagu penuh anda DUA kali: versi "selamat" dan versi "berani" (dengan dynamics penuh).</p>' },
+    { h: 'Dengar balik seperti juri', body:
+      '<p>Dengar rakaman SELEPAS selesai main, bukan sambil. Dengan mata tertutup, beri tumpuan kepada 3 perkara sahaja:</p>' +
+      '<ol><li><b>Steady?</b> Rentak stabil atau berlari-lari?</li>' +
+      '<li><b>Licin?</b> Peralihan chord ada "bengkang" atau tidak?</li>' +
+      '<li><b>Bercerita?</b> Ada dynamics — atau semua satu kelantangan?</li></ol>' },
+    { h: 'Senarai semak penilaian', body:
+      '<p>Gunakan senarai di bawah semasa mendengar rakaman kedua:</p>',
+      w: { t: 'check', id: 'w4a', items: [
+        'Rentak steady dari mula sampai tamat',
+        'Tiada peralihan chord yang putus/berhenti seketika',
+        'Dynamics ada — bahagian kuat & lembut jelas beza',
+        'Not akhir lagu dimainkan dengan yakin (bukan "hilang")',
+        'Saya boleh dengar "cerita" dalam mainan saya'
+      ] } },
+    { h: 'Peraturan 80/20 pembaikan', body:
+      '<div class="tip"><b>Pilih SATU kelemahan</b> untuk diperbaiki esok — bukan lima. Fokus tunggal membaiki lebih banyak dalam seminggu daripada "baiki semua" yang tidak selesai.</div>' }
+  ],
+  practice: 'Latihan (20 minit): Rakam 2 versi lagu repertoir anda, dengar balik, isi senarai semak, dan tulis SATU fokus esok.' },
+
+{ n: 30, week: 4, emoji: '🎓', title: 'Graduation!',
+  goal: 'Anda sudah punyai segalanya untuk terus bermain seumur hidup. Hari ini kita raikan dan susun langkah seterusnya.',
+  secs: [
+    { h: 'Lihat jauh anda sudah berjalan', body:
+      '<p>30 hari lalu anda mungkin tak tahu mana satu Middle C. Hari ini anda boleh:</p>' +
+      '<ul><li>Main skala & melodi dengan kedua-dua tangan</li>' +
+      '<li>Main 8+ chord dan progression paling popular di dunia</li>' +
+      '<li>Melodi + iringan dua tangan (lagu penuh!)</li>' +
+      '<li>Pattern block, 8-beat, waltz & arpeggio</li>' +
+      '<li>Transpose, sus chords, dan improvisasi pertama anda</li></ul>' },
+    { h: 'Permainan terakhir: medley', body:
+      '<p>Main satu "medley mini" — progression kegemaran kita, kemudian masuk lagu Senja Pertama, akhiri dengan improvisasi pentatonic anda sendiri. Rakam ia — ini diploma anda!</p>',
+      w: { t: 'prog', chords: ['C','G','Am','F'], pattern: 'beat8', bpm: 95, loop: 8 } },
+    { h: 'Roadmap selepas ini', body:
+      '<p>Ke mana sahaja anda mahu pergi, ini jalan berterusan:</p>' +
+      '<ul><li><b>Minggu depan:</b> skala G & F major — buka key baru</li>' +
+      '<li><b>Bulan depan:</b> chord 7th (C7, G7, Am7) — bunyi jazz/blues</li>' +
+      '<li><b>Bila-bila:</b> cari chord chart lagu kegemaran & belajar mengikut frasa</li>' +
+      '<li><b>Bercita-cita?</b> Not staf klasik — anda kini ada konteks chord, jadi nota staf akan lebih mudah</li></ul>' },
+    { h: 'Prinsip terakhir', body:
+      '<div class="tip"><b>"Pemain hebat bukan yang berlatih lama sekali — tetapi yang kembali kepada kekunci setiap hari."</b> Jumpa di keyboard! 🎹</div>' }
+  ],
+  practice: 'Latihan terakhir (30 minit): Rakam medley mini anda. Simpan. Enam bulan dari sekarang, dengar balik — dan rasakan betapa jauhnya anda sudah berjalan.' }
+];
+
+const WEEKS = {
+  1: { title: 'Kenali & Mula', sub: 'Kekunci, postur, skala, rentak & melodi pertama' },
+  2: { title: 'Dunia Chord', sub: 'Triad, 6 chord utama, progression I-V-vi-IV, inversions' },
+  3: { title: 'Main Lagu Kekesukaan', sub: 'Lead sheet, melodi+chord, pattern pop & waltz, sus, transpose' },
+  4: { title: 'Polish & Repertoir', sub: 'Pedal, dynamics, arpeggio, improvisasi, repertoir & grad' }
+};
+
+/* ===== melodi.js ===== */
+/* ============================================================
+   Piano 30 Hari — Melodi 🎵 & Kuiz
+   Melodi: pesona comel (CSS-animated) yang menyapa, menari bila
+   kekunci ditekan, dan react kepada jawapan kuiz.
+   Kuiz: 2 soalan setiap hari, skor disimpan, penjelasan diberi.
+   ============================================================ */
+
+/* ---------- Ucapan Melodi setiap hari ---------- */
+const P30_CHAT = {
+  1: 'Hai! Saya Melodi 🎵 Saya jadi teman you sepanjang 30 hari ni. Jangan malu — klik kekunci bawah dulu!',
+  2: 'Postur betul = main lama tak penat. Jom duduk elok-elok, bahu relax!',
+  3: 'Skala ni macam tangga — naik satu-satu, jangan tergesa ya!',
+  4: 'Dua tangan serentak? Otak you memang boleh! Kuncinya: perlahankan separuh.',
+  5: 'Rentak ialah jantung lagu. Denger degutan dia~ 1-2-3-4!',
+  6: 'Lagu PERTAMA you hari ni! Saya tak sabar nak dengar 😊',
+  7: 'Wow, dah satu minggu penuh! Saya memang bangga dengan you!',
+  8: 'Hari ni rahsianya dibuka... chord! Let\'s go!',
+  9: 'Tiga chord ni buka ratusan lagu tau. Hafal bentuk jari je!',
+  10: 'Minor = rasa hujan petang. Sedih tapi cantik 🌧️',
+  11: 'Progression NI yang buat lagu-lagu jadi hit! Dengar betapa familiar-nya.',
+  12: 'Tangan kiri you kini ada tugas rasmi. Teamwork makes the dream work!',
+  13: 'Inversion macam jalan pintas — jimat tenaga, licin bunyinya!',
+  14: 'Dua minggu! You sekarang chord warrior 💪',
+  15: 'Baca chord chart = superpower pemain pop. Semua band guna ni!',
+  16: 'Dua tangan, dua peranan. Harmoni indah!',
+  17: '8-beat ni bunyi radio sebenar. Tukar pattern, dengar beza!',
+  18: 'Satuu-dua-tigaa... melayang macam waltz! 🌀',
+  19: 'Sus tu macam gula-gula tergantung. Manis dan menagih jawapan!',
+  20: 'Pindah key = lagu yang sama, rumah baru. Bentuk jari tak berubah!',
+  21: 'TIGA MINGGU! You dah boleh main lagu penuh, tahu?!',
+  22: 'Hari ni kaki pun belajar piano 😄 Pedal tu penting!',
+  23: 'Kuat, lembut — macam ombak laut. Beri cerita anda bukit & lembah!',
+  24: 'Arpeggio = chord yang berkecai jadi bunga 🌸',
+  25: 'Lagu ballad PENUH hari ni. Dengar betapa indahnya~',
+  26: 'Lagu kedua dalam repertoir! Anda membesar sebagai pemain!',
+  27: 'Hari improv! Tiada jawapan salah hari ni — cuma not yang belum you dengar 🎶',
+  28: 'Rutin 5-5-10: ringkas tapi power. Konsisten > lama!',
+  29: 'Rakam, dengar, baikkan. Juri terbaik anda ialah anda sendiri!',
+  30: 'GRADUATION! 🎓 Saya dari awal memang tahu you boleh. Jumpa di keyboard!'
+};
+
+/* ---------- Ucapan di halaman utama ---------- */
+const P30_HOME_GREET = [
+  'Jom mula! Klik hari mana-mana — semua terbuka, ikut rentak sendiri 🎹',
+  'Tip saya: 20 minit sehari lagi power daripada 3 jam sekali minggu!',
+  'Klik kekunci di bawah — bunyi piano sebenar, tak payah piano mahal!',
+  'Progress you tersimpan kat sini. Balik semula bila-bila masa ya!'
+];
+
+function P30HomeGreeting() {
+  let done = 0;
+  try { done = (JSON.parse(localStorage.getItem('p30_done')) || []).length; } catch (e) {}
+  if (done >= 30) return '30/30 HARI?! You legend sebenar! 🏆 Saya menangis happy ni...';
+  if (done >= 15) return 'Sudah ' + done + '/30! Separuh jalan! Momentum jangan lepaskan ya 💪';
+  if (done >= 5) return done + '/30 hari siap! Bakar terus api semangat ni! 🔥';
+  return P30_HOME_GREET[Math.floor(Math.random() * P30_HOME_GREET.length)];
+}
+
+function P30ChatDay(n) { return P30_CHAT[n] || 'Jom belajar!'; }
+
+/* ---------- Kuiz: 2 soalan sehari ---------- */
+const P30_QUIZ = {
+  1: [
+    { q: 'Berapa not putih dalam satu oktaf?', o: ['7 — C D E F G A B', '5 — C D E F G', '12 — semua kekunci'], a: 0, w: '7 not putih berulang setiap oktaf. Kekunci hitam menyempitkan jurang antara not putih.' },
+    { q: 'Kekunci putih di sebelah KIRI 2 kekunci hitam ialah...', o: ['C', 'F', 'A'], a: 0, w: 'Pola 2-3 hitam inilah "peta" anda untuk jumpa C dengan pantas.' }
+  ],
+  2: [
+    { q: 'Telunjuk tangan kanan ialah jari nombor...', o: ['2', '1', '3'], a: 0, w: 'Ibu jari = 1, telunjuk = 2, sehingga kelingking = 5. Bahasa jari standard seluruh dunia.' },
+    { q: 'Postur betul: lengan anda mesti...', o: ['Selari dengan lantai', 'Tegak ke atas', 'Bengkok ke bawah'], a: 0, w: 'Kerusi terlalu rendah/tinggi = ketegangan. Lengan selari = kawalan maksimum.' }
+  ],
+  3: [
+    { q: 'Formula major scale ialah...', o: ['W-W-H-W-W-W-H', 'W-W-W-H-W-H-W', 'H-W-W-H-W-W-W'], a: 0, w: 'Formula ini membina SEMUA major scale — C major paling mudah sebab semua not putih.' },
+    { q: 'Jarak E→F ialah...', o: ['Semitone (half)', 'Whole tone', 'Tak tentu'], a: 0, w: 'Tiada kekunci hitam antara E dan F — jadi jaraknya half sahaja.' }
+  ],
+  4: [
+    { q: 'Latihan 5-not tangan kiri mula dengan jari...', o: ['5 (kelingking)', '1 (ibu jari)', '3 (tengah)'], a: 0, w: 'Tangan kiri mirror tangan kanan: kelingking mula dari C3 ke atas.' },
+    { q: 'Cara terbaik mula main dua tangan serentak?', o: ['Separuh kelajuan', 'Kelajuan penuh terus', 'Tutup mata'], a: 0, w: 'Otak perlukan masa bina "wayar" baru. Perlahan dulu, kelajuan datang kemudian.' }
+  ],
+  5: [
+    { q: 'BPM bermaksud...', o: ['Beats per minute', 'Bass per music', 'Basic piano mode'], a: 0, w: '60 BPM = 1 beat setiap saat — rentak lagu diukur dengan ini.' },
+    { q: 'Peraturan emas latihan dengan metronome?', o: ['Naik BPM hanya bila lancar 3x berturut', 'Naik BPM setiap 2 minit', 'Metronome untuk pro sahaja'], a: 0, w: 'Kelajuan perfect-perlahan mengalahkan kelajuan huru-hara!' }
+  ],
+  6: [
+    { q: '3 not pertama "Mary Had a Little Lamb" ialah...', o: ['E D C', 'C D E', 'G E C'], a: 0, w: '"Ma-ry had..." = E D C. Not berpusat di sekeliling C — sebab itu lagu sesuai pertama.' },
+    { q: 'Cara paling pantas hafal lagu?', o: ['Pecah kepada frasa 4 bar', 'Main 30 not sekaligus', 'Hafal nombor jari sahaja'], a: 0, w: 'Otak suka blok kecil. 4 frasa pendek >> 1 lagu panjang.' }
+  ],
+  7: [
+    { q: 'Middle C ialah...', o: ['C yang paling dekat tengah keyboard', 'C paling rendah', 'Mana-mana C'], a: 0, w: 'Ia "alamat rumah" kedua-dua tangan — RH ke kanannya, LH ke kirinya.' },
+    { q: 'Fokus Minggu 2 nanti?', o: ['Chord — blok bangunan lagu!', 'Nota staf klasik', 'Main laju'], a: 0, w: 'Chord dulu, sheet music kemudian — cara paling pantas ke lagu sebenar.' }
+  ],
+  8: [
+    { q: 'Formula major triad dari root...', o: ['+4 kemudian +3 semitone', '+3 kemudian +4', '+5 dan +5'], a: 0, w: 'C → E (+4) → G (+3). Songsangkan urutan itu dan anda dapat minor!' },
+    { q: 'C major terdiri daripada not...', o: ['C E G', 'C D E', 'C F A'], a: 0, w: 'Tekan serentak dengan jari 1-3-5 — bentuk yang akan anda bawa ke semua chord.' }
+  ],
+  9: [
+    { q: 'G major =', o: ['G B D', 'G A B', 'G C E'], a: 0, w: 'Gunakan formula +4/+3 dari G dan anda sampai ke B dan D.' },
+    { q: 'F major =', o: ['F A C', 'F G A', 'F B D'], a: 0, w: 'C, F, G = "tiga chord emas" key of C. Ratusan lagu guna tiga-tiga ni sahaja!' }
+  ],
+  10: [
+    { q: 'Am terdiri daripada...', o: ['A C E', 'A D F', 'A B E'], a: 0, w: 'Minor formula: +3 kemudian +4 dari root A.' },
+    { q: 'Rasa chord minor lazimnya...', o: ['Sedih / pilu', 'Gembira', 'Marah'], a: 0, w: 'Satu not sahaja berubah dari major, tetapi emosi berubah sepenuhnya. Itulah kuasa chord!' }
+  ],
+  11: [
+    { q: 'I–V–vi–IV dalam key of C =', o: ['C G Am F', 'C Dm Em F', 'Am F C G'], a: 0, w: 'Progression yang sama dipakai oleh ratusan lagu hit — "progression 4 chord".' },
+    { q: 'Cuba nyanyi lagu kegemaran anda atas C-G-Am-F...', o: ['Kebanyakan melodi akan muat!', 'Tiada lagu akan muat', 'Hanya lagu rock muat'], a: 0, w: 'Itulah sebabnya progression ini terkenal — ia bahasa muzik pop sejagat.' }
+  ],
+  12: [
+    { q: 'Tugas tangan kiri dalam iringan?', o: ['Root chord (bass)', 'Melodi', 'Semua not serentak'], a: 0, w: 'LH = "bumi" (bass), RH = "badan" (chord). Pembahagian kerja klasik pemain keyboard.' },
+    { q: 'Pola "boom-chick": boom datang pada...', o: ['Beat 1 & 3', 'Beat 2 & 4', 'Setiap 8 not'], a: 0, w: 'Boom (bass) pada 1 & 3, chick (chord) mengisi selebihnya — denyut pop sebenar.' }
+  ],
+  13: [
+    { q: '1st inversion C major =', o: ['E G C', 'G C E', 'C E G'], a: 0, w: 'Not sama, susunan lain — E paling bawah. Bunyinya tetap "chord C".' },
+    { q: 'Faedah utama inversion?', o: ['Peralihan chord lebih licin', 'Bunyi 2x lebih kuat', 'Tak perlu hafal chord'], a: 0, w: 'Tangan bergerak minimum tapi chord tetap bertukar — rahsia bunyi "pro".' }
+  ],
+  14: [
+    { q: 'Dm =', o: ['D F A', 'D A C', 'D E G'], a: 0, w: 'Minor +3/+4 dari root D. Nombor 3 nota terakhir F memberi rasa minor.' },
+    { q: 'Em =', o: ['E G B', 'E A B', 'E G C'], a: 0, w: 'Chord minor paling mesra pemula — semua not putih, mudah dibentuk.' }
+  ],
+  15: [
+    { q: 'Chord chart / lead sheet menulis...', o: ['Nama chord + lirik', 'Nota staf penuh', 'Lirik sahaja'], a: 0, w: 'Inilah cara pemain pop & band wedding membaca ratusan lagu — dan anda kini boleh juga!' },
+    { q: 'Bahagian "top" lagu yang selalu diulang ialah...', o: ['Chorus', 'Verse', 'Intro'], a: 0, w: 'Verse bercerita, chorus meletup. Dengar lagu kegemaran dan kenal pasti bila ia "bertukar bahagian".' }
+  ],
+  16: [
+    { q: 'Dalam teknik melodi + chord, tangan kanan main...', o: ['Melodi lagu', 'Root chord', 'Rentak drum'], a: 0, w: 'RH nyanyi melodi, LH menyokong — kedengaran macam dua orang, tetapi anda seorang!' },
+    { q: 'Tangan kiri paling mudah main...', o: ['Root chord sahaja', 'Melodi pantas', 'Chord 10 not'], a: 0, w: 'Cukup root sahaja untuk mula! Canggih kemudian.' }
+  ],
+  17: [
+    { q: 'Pattern 8-beat beri berapa not setiap bar?', o: ['8', '4', '16'], a: 0, w: 'Lapan not berterusan — "jantung" lagu pop tempo sederhana.' },
+    { q: 'Rasa 8-beat paling sesuai untuk...', o: ['Ballad & lagu pop tempo sederhana', 'Muzik marching', 'Lagu tidur'], a: 0, w: 'Dari "Let It Be" hingga evergreen Melayu — denyut 8 yang sama.' }
+  ],
+  18: [
+    { q: 'Waltz dikira berapa beat setiap bar?', o: ['3', '4', '6'], a: 0, w: 'BERAT-lembut-lembut. 1-2-3, 1-2-3 — rasa melayang era dulu.' },
+    { q: 'Penekanan waltz jatuh pada beat...', o: ['1', '2', '3'], a: 0, w: 'Root dalam pada beat 1, chord lembut pada 2 & 3.' }
+  ],
+  19: [
+    { q: 'Csus4 =', o: ['C F G', 'C D G', 'C F A'], a: 0, w: 'Gantikan not ke-3 (E) dengan ke-4 (F). Rasa "terbuka & menagih jawapan".' },
+    { q: 'Sus chord memberi rasa...', o: ['Tergantung — mahu penyelesaian', 'Tidur dan tenang', 'Marah dan kasar'], a: 0, w: 'Sebab itu ia sesuai di akhir baris lagu — bertanya sebelum chord asal "menjawab".' }
+  ],
+  20: [
+    { q: 'C-G-Am-F dipindahkan ke key of G menjadi...', o: ['G D Em C', 'G C D E', 'G D G C'], a: 0, w: 'Semua chord naik jarak sama. Bentuk & rasa lagu TIDAK berubah — hanya key baru.' },
+    { q: 'Sebab utama transpose lagu?', o: ['Supaya muat suara penyanyi', 'Bunyi lebih mahal', 'Untuk guna kekunci hitam'], a: 0, w: 'Suara manusia ada julat berbeza — keyboard anda boleh "memindahkan rumah" dengan mudah.' }
+  ],
+  21: [
+    { q: 'Happy Birthday bermula dengan not...', o: ['G', 'C', 'E'], a: 0, w: '"Hap-py..." = G G. Lagu wajib dalam repertoir semua orang!' },
+    { q: 'Selang penukaran chord lazimnya berapa beat?', o: ['4 (satu bar)', '2', '16'], a: 0, w: 'Kebanyakan pop: satu chord sebar. Dengar bila melodi "bertukar rumah" — itu masanya tukar chord.' }
+  ],
+  22: [
+    { q: 'Pedal kanan dipanggil pedal...', o: ['Sustain', 'Mute', 'Volume'], a: 0, w: 'Ia mengangkat damper supaya not terus bergetar — bunyi menjadi sepoi dan menyambung.' },
+    { q: 'Bila angkat & tekan semula pedal?', o: ['Pada setiap pertukaran chord', 'Setiap 2 minit sahaja', 'Jangan sentuh langsung'], a: 0, w: 'Tekan terus-terusan dan semua not bercampur jadi sop santan! Bertukar pada chord baru.' }
+  ],
+  23: [
+    { q: 'Simbol "f" bermaksud...', o: ['Forte — kuat', 'Finish', 'Flat'], a: 0, w: 'f = forte (kuat), p = piano (lembut). Dua huruf, dua dunia emosi.' },
+    { q: 'Crescendo bermaksud...', o: ['Membesar — kian kuat', 'Berhenti seketika', 'Pelan sepanjang lagu'], a: 0, w: 'Dynamics memberikan lagu anda bukit dan lembah — cerita, bukan robot.' }
+  ],
+  24: [
+    { q: 'Arpeggio ialah chord yang...', o: ['Dipecah not demi not', 'Dimainkan 2x lebih kuat', 'Dibalik urutannya'], a: 0, w: 'C… E… G… E… seperti ombak — rasa luas dan romantis.' },
+    { q: 'Urutan arpeggio asas?', o: ['Root–3rd–5th–3rd', '5th–3rd–root–root', 'Rawak bebas'], a: 0, w: 'Naik lalu turun semula. Pattern ini boleh dipakai atas hampir semua chord!' }
+  ],
+  25: [
+    { q: 'Progression "Senja Pertama"?', o: ['C G Am F', 'C D E F', 'Am G F E'], a: 0, w: 'Progression kegemaran kita — lagu asal Piano 30 Hari ditulis khas untuk kemahiran anda hari ini.' },
+    { q: 'Struktur soalan-jawab dalam lagu dipanggil...', o: ['Frasa (phrase)', 'Bridge', 'Coda'], a: 0, w: 'Frasa 1 bertanya, frasa 2 menjawab — bahasa muzik yang hampir semua lagu guna.' }
+  ],
+  26: [
+    { q: 'Twinkle Twinkle dipakai Mozart untuk...', o: ['Variation terkenal', 'Simfoni ketiganya', 'Opera pertamanya'], a: 0, w: 'Ya! Melodi "kanak-kanak" ini menjadi karya agung — jangan dipandang rendah!' },
+    { q: '"Versi persembahan" bermula dengan...', o: ['Block chord lembut, kemudian naik suasa', 'Rentak penuh dari not pertama', 'Diam 4 bar dulu'], a: 0, w: 'Bina dari tenang ke hangat — penonton masuk ke dalam cerita anda.' }
+  ],
+  27: [
+    { q: 'Pentatonic C =', o: ['C D E G A', 'C D E F G', 'C E G B D'], a: 0, w: 'Skala 5 not — buang F & B, dua not "berbahaya".' },
+    { q: 'Kenapa pentatonic senang untuk improvisasi?', o: ['Not "berbahaya" sudah dibuang', 'Semua kekunci hitam', 'Cuma 3 not perlu'], a: 0, w: 'Hampir mustahil silap atas chord C, Am atau F. Main bebas tanpa takut!' }
+  ],
+  28: [
+    { q: 'Rutin latihan berkesan hari ini?', o: ['5-5-10 (warm-up, teknik, lagu)', '10-10-10', 'Main bila teringat'], a: 0, w: 'Warm-up 5 min, teknik 5 min, lagu 10 min — struktur pro dalam 20 minit sahaja.' },
+    { q: 'Mana LAGI berkesan?', o: ['20 minit setiap hari', '3 jam sekali seminggu', 'Tengok video tutorial sahaja'], a: 0, w: 'Konsistensi mengalahkan durasi. Otak belajar melalui pengulangan berkala.' }
+  ],
+  29: [
+    { q: 'Cara termudah merakam diri?', o: ['Telefon di atas meja, jarak 1 meter', 'Sewa studio', 'Mic diletak atas piano'], a: 0, w: 'Getaran piano terlalu kuat untuk mic di atasnya — meja bersebelahan lebih jernih.' },
+    { q: 'Berapa kelemahan fokus untuk diperbaiki esok?', o: ['SATU sahaja', 'Lima sekaligus', 'Semua lagi-lagi'], a: 0, w: 'Peraturan 80/20: satu fokus tunggal membaiki lebih banyak daripada "baiki semua".' }
+  ],
+  30: [
+    { q: 'Roadmap bulan depan?', o: ['Chord 7th — bunyi jazz & blues', 'Terus berhenti di sini', 'Ulang Hari 1 sahaja'], a: 0, w: 'C7, G7, Am7 — chord "bumbuk" profesional. Anda sudah ada asas untuk itu!' },
+    { q: 'Prinsip terakhir daripada Melodi?', o: ['Kembali ke kekunci setiap hari', 'Beli piano baru dulu', 'Guru mesti ada'], a: 0, w: 'Pemain hebat bukan yang berlatih lama sekali — tetapi yang kembali setiap hari. Jumpa di keyboard! 🎹' }
+  ]
+};
+
+/* ============================================================
+   MElODI — pesona CSS-animated
+   ============================================================ */
+function P30Melodi(msg, opts) {
+  opts = opts || {};
+  const wrap = document.createElement('div');
+  wrap.className = 'melodi-row' + (opts.small ? ' small' : '');
+
+  const m = document.createElement('div');
+  m.className = 'melodi';
+  m.setAttribute('aria-hidden', 'true');
+  m.innerHTML =
+    '<div class="m-note">♪</div>' +
+    '<div class="m-body">' +
+      '<div class="m-eye l"></div><div class="m-eye r"></div>' +
+      '<div class="m-cheek l"></div><div class="m-cheek r"></div>' +
+      '<div class="m-mouth"></div>' +
+      '<div class="m-arm l"></div><div class="m-arm r"></div>' +
+    '</div>' +
+    '<div class="m-shadow"></div>' +
+    '<div class="m-hearts"><span>♥</span><span>♥</span><span>♥</span></div>';
+  m._set = function (state, ms) { /* tukar ekspresi seketika */
+    m.classList.remove('happy', 'sad');
+    void m.offsetWidth;
+    m.classList.add(state);
+    if (ms) setTimeout(() => m.classList.remove(state), ms);
+  };
+  wrap.appendChild(m);
+
+  if (msg) {
+    const b = document.createElement('div');
+    b.className = 'm-bubble';
+    b.textContent = msg;
+    wrap.appendChild(b);
+  }
+  wrap.melodi = m;
+  return wrap;
+}
+
+/* ============================================================
+   WIDGET KUIZ
+   ============================================================ */
+function P30QuizWidget(n) {
+  const qs = P30_QUIZ[n];
+  if (!qs) return document.createElement('span');
+
+  const w = document.createElement('div');
+  w.className = 'widget quiz-widget';
+  const head = document.createElement('div');
+  head.className = 'widget-head';
+  const melodiRow = P30Melodi('', { small: true });
+  melodiRow.classList.add('in-head');
+  head.appendChild(melodiRow);
+  head.insertAdjacentHTML('beforeend',
+    '<div><div class="wtitle">🎮 Kuiz Hari ' + n + '</div>' +
+    '<div class="wsub">Jawab & lihat Melodi react! Jawapan dihuraikan.</div></div>');
+  w.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'widget-body';
+  w.appendChild(body);
+
+  const KEY = 'p30_quiz_d' + n;
+  let best = 0;
+  try { best = +localStorage.getItem(KEY) || 0; } catch (e) {}
+
+  let idx = 0, score = 0;
+
+  function sfx(ok) {
+    try {
+      Audio30.ensure();
+      if (ok) {
+        Audio30.playNote('C5', 0, 0.18, 0.35);
+        Audio30.playNote('E5', 0.09, 0.18, 0.35);
+        Audio30.playNote('G5', 0.18, 0.5, 0.35);
+      } else {
+        Audio30.playNote('G3', 0, 0.3, 0.3);
+        Audio30.playNote('F#3', 0.12, 0.45, 0.3);
+      }
+    } catch (e) {}
+  }
+
+  function renderQ() {
+    body.innerHTML = '';
+    if (idx >= qs.length) return renderEnd();
+
+    const q = qs[idx];
+    const correct = q.o[q.a];
+    const order = q.o.map((t, i) => ({ t, i })).sort(() => Math.random() - 0.5);
+
+    const prog = document.createElement('div');
+    prog.className = 'q-progress';
+    prog.textContent = 'Soalan ' + (idx + 1) + ' / ' + qs.length + ' · Skor terbaik: ' + best + '/' + qs.length;
+    body.appendChild(prog);
+
+    const qt = document.createElement('div');
+    qt.className = 'q-text';
+    qt.textContent = q.q;
+    body.appendChild(qt);
+
+    const opts = document.createElement('div');
+    opts.className = 'q-opts';
+    let answered = false;
+    order.forEach(it => {
+      const b = document.createElement('button');
+      b.className = 'q-opt';
+      b.textContent = it.t;
+      b.onclick = () => {
+        if (answered) return;
+        answered = true;
+        const ok = it.i === q.a;
+        if (ok) score++;
+        body.querySelectorAll('.q-opt').forEach(x => x.disabled = true);
+        if (ok) b.classList.add('correct');
+        else {
+          b.classList.add('wrong');
+          body.querySelectorAll('.q-opt').forEach(x => { if (x.textContent === correct) x.classList.add('correct'); });
+        }
+        sfx(ok);
+        melodiRow.melodi._set(ok ? 'happy' : 'sad', 1400);
+        const why = document.createElement('div');
+        why.className = 'q-why';
+        why.innerHTML = (ok ? '<b class="ok-txt">Betul! 🎉</b> ' : '<b class="bad-txt">Belum tepat.</b> ') + q.w;
+        body.appendChild(why);
+        const next = document.createElement('button');
+        next.className = 'btn small q-next';
+        next.textContent = idx + 1 < qs.length ? 'Soalan seterusnya →' : 'Lihat skor saya →';
+        next.onclick = () => { idx++; renderQ(); };
+        body.appendChild(next);
+      };
+      opts.appendChild(b);
+    });
+    body.appendChild(opts);
+  }
+
+  function renderEnd() {
+    const total = qs.length;
+    if (score > best) { best = score; try { localStorage.setItem(KEY, String(best)); } catch (e) {} }
+    const perfect = score === total;
+    const msg = perfect ? 'PERFECT! Melodi melompat gembira! 🎉' :
+                score > 0 ? 'Tidak buruk — baca huraian & cuba lagi untuk skor penuh!' :
+                'Tak apa! Ulang pelajaran hari ni dan cuba semula ya 💪';
+    body.innerHTML =
+      '<div class="q-end' + (perfect ? ' perfect' : '') + '">' +
+        '<div class="q-score">' + score + ' / ' + total + (perfect ? ' 🏆' : '') + '</div>' +
+        '<p>' + msg + '</p>' +
+        '<div class="q-meta">Skor terbaik anda: ' + best + '/' + total + '</div>' +
+      '</div>';
+    const again = document.createElement('button');
+    again.className = 'btn small ghost';
+    again.textContent = '↻ Cuba lagi';
+    again.onclick = () => { idx = 0; score = 0; renderQ(); };
+    body.appendChild(again);
+    if (perfect) melodiRow.melodi._set('happy', 3000);
+  }
+
+  renderQ();
+  return w;
+}
+
+/* ============================================================
+   LAGU MELODI 🎵 — sistem mata: hari selesai + kuiz = NOTA
+   30 hari = 30 nota. Mata kuiz tentukan kualiti nota:
+   locked → plain (hari siap, kuiz belum) → silver (1/2) → gold (2/2)
+   Milestone 7/14/21/30: melodi terkumpul DIMAINKAN sebenar.
+   30/30: lagu penuh + confetti + graduation! 🎓
+   ============================================================ */
+
+/* Lagu asli Piano 30 Hari — AABA + koda, di atas dunia chord kita */
+const SONG_MELODI = [
+  'E4','G4','A4','G4','E4','D4','C4',          // Frasa 1 (M1) — C
+  'E4','G4','A4','G4','E4','D4','C4',          // Frasa 2 (M2) — G
+  'A4','C5','B4','A4','G4','E4','G4',         // Frasa 3 (M3) — Am
+  'E4','G4','A4','G4','E4','D4','C4',         // Frasa 4 (M4) — F
+  'D4','C4'                                    // koda — C (pulang)
+];
+const SONG_CHORDS = { 0: 'C', 7: 'G', 14: 'Am', 21: 'F', 28: 'C' }; // bass di frasa
+
+function p30NoteState(day) {
+  let done = false;
+  try { done = (JSON.parse(localStorage.getItem('p30_done')) || []).includes(day); } catch (e) {}
+  if (!done) return 'locked';
+  let best = 0;
+  try { best = +localStorage.getItem('p30_quiz_d' + day) || 0; } catch (e) {}
+  if (best >= 2) return 'gold';
+  if (best === 1) return 'silver';
+  return 'plain';
+}
+function P30MataTotal() {
+  let t = 0;
+  for (let d = 1; d <= 30; d++) { try { t += +localStorage.getItem('p30_quiz_d' + d) || 0; } catch (e) {} }
+  return t;
+}
+function P30UnlockedCount() {
+  let n = 0;
+  for (let d = 1; d <= 30; d++) if (p30NoteState(d) !== 'locked') n++;
+  return n;
+}
+
+/* Main melodi terkumpul (nota 1..count) + backing chord di frasa */
+function P30PlaySong(count) {
+  count = Math.min(count, 30);
+  const dt = 0.42;
+  try {
+    Audio30.ensure();
+    for (let i = 0; i < count; i++) {
+      const t = i * dt;
+      Audio30.playNote(SONG_MELODI[i], t, dt * 1.35, 0.5);
+      const ch = SONG_CHORDS[i];
+      if (ch) {
+        const c = parseChord(ch);
+        Audio30.playNote(Audio30.nameOf(Audio30.midiOf(c.root + '3')), t, dt * 7, 0.22);
+        c.notes.forEach(n => Audio30.playNote(n, t, dt * 7, 0.14));
+      }
+    }
+  } catch (e) { /* pelayar tanpa Web Audio */ }
+  /* animasi nota di papan jika ada */
+  const notes = document.querySelectorAll('.snote');
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const n = notes[i];
+      if (!n) return;
+      n.classList.add('playing');
+      setTimeout(() => n.classList.remove('playing'), 380);
+    }, i * dt * 1000);
+  }
+  /* Melodi "menunjuk tangan" semasa lagu bermain */
+  const m = document.querySelector('.melodi-row:not(.in-head) .melodi') || document.querySelector('.melodi');
+  if (m) {
+    const dur = count * dt * 1000;
+    m.classList.add('conducting');
+    setTimeout(() => m.classList.remove('conducting'), dur);
+  }
+}
+
+/* Confetti — CSS sahaja, auto-buang */
+function P30Confetti() {
+  const c = document.createElement('div');
+  c.className = 'p30-confetti';
+  const colors = ['#B4531F', '#C99A3C', '#4C7A4F', '#E4584C', '#5B7059'];
+  for (let i = 0; i < 44; i++) {
+    const s = document.createElement('span');
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDelay = (Math.random() * 1.2) + 's';
+    s.style.animationDuration = (2.2 + Math.random() * 1.6) + 's';
+    s.style.width = s.style.height = (6 + Math.random() * 7) + 'px';
+    c.appendChild(s);
+  }
+  document.body.appendChild(c);
+  setTimeout(() => c.remove(), 5000);
+}
+
+/* Callback selepas user tandakan hari SELESAI (dipanggil app.js) */
+function P30OnDayDone(n) {
+  let count = 0;
+  try { count = (JSON.parse(localStorage.getItem('p30_done')) || []).length; } catch (e) {}
+  const bubble = document.querySelector('.melodi-row:not(.in-head) .m-bubble');
+  const melodi = document.querySelector('.melodi-row:not(.in-head) .melodi');
+  const milestone = count === 7 || count === 14 || count === 21 || count === 30;
+  if (bubble) {
+    bubble.textContent = count >= 30
+      ? '🎓 LAGU MELODI LENGKAP! Dengar — lagu yang ANDA bina, dari nota pertama hingga terakhir!'
+      : milestone
+        ? '🌟 Milestone ' + count + ' nota! Dengar melodi yang anda bina~'
+        : 'Nota ke-' + count + ' terbuka dalam Lagu Melodi! 🎵';
+    bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+  }
+  if (melodi) melodi._set('happy', 2600);
+  if (milestone) {
+    setTimeout(() => { P30PlaySong(count); if (count >= 30) P30Confetti(); }, 700);
+  }
+}
+
+/* ---------- PAPAN LAGU (halaman utama) ---------- */
+function P30SongBoard() {
+  const sec = document.createElement('section');
+  sec.className = 'songboard';
+
+  const unlocked = P30UnlockedCount();
+  const mata = P30MataTotal();
+  const allDone = unlocked >= 30;
+
+  const head = document.createElement('div');
+  head.className = 'sb-head';
+  head.innerHTML =
+    '<div><div class="wtitle">🎵 Lagu Melodi — lagu yang anda bina</div>' +
+    '<div class="wsub">Hari selesai buka nota · jawapan kuiz betul jadikan nota EMAS</div></div>';
+  sec.appendChild(head);
+
+  const stats = document.createElement('div');
+  stats.className = 'sb-stats';
+  stats.innerHTML =
+    '<span class="pill">Nota dibuka: <b>' + unlocked + '/30</b></span>' +
+    '<span class="pill">Mata kuiz: <b>' + mata + '/60</b></span>' +
+    '<span class="pill">Nota emas: <b>' + (function () { let g = 0; for (let d = 1; d <= 30; d++) if (p30NoteState(d) === 'gold') g++; return g; })() + '</b></span>';
+  sec.appendChild(stats);
+
+  const board = document.createElement('div');
+  board.className = 'sb-board';
+  for (let d = 1; d <= 30; d++) {
+    const st = p30NoteState(d);
+    const note = document.createElement('span');
+    note.className = 'snote ' + st;
+    note.dataset.day = d;
+    note.title = 'Hari ' + d + (st === 'locked' ? ' — selesaikan hari untuk buka nota' : ' — nota terbuka');
+    board.appendChild(note);
+    if (d % 7 === 0 && d < 30) {
+      const sep = document.createElement('span');
+      sep.className = 'sb-week';
+      sep.textContent = 'M' + (d / 7);
+      board.appendChild(sep);
+    }
+  }
+  sec.appendChild(board);
+
+  const badges = document.createElement('div');
+  badges.className = 'sb-badges';
+  [[7, 'Frasa 1'], [14, 'Separuh Lagu'], [21, 'Hampir Sampai'], [30, '🎓 Lagu Lengkap']].forEach(function (m) {
+    const b = document.createElement('span');
+    b.className = 'sb-badge' + (unlocked >= m[0] ? ' reached' : '');
+    b.textContent = m[1];
+    if (m[0] === 30 && allDone) b.classList.add('grad');
+    badges.appendChild(b);
+  });
+  sec.appendChild(badges);
+
+  const play = document.createElement('button');
+  play.className = 'btn' + (unlocked > 0 ? '' : ' ghost');
+  play.textContent = unlocked > 0
+    ? '▶ Main Lagu Melodi (' + unlocked + ' nota' + (unlocked === 30 ? ' — LAGU PENUH!' : '') + ')'
+    : 'Selesaikan Hari 1 untuk buka nota pertama';
+  if (unlocked > 0) play.onclick = () => { P30PlaySong(unlocked); if (unlocked >= 30) P30Confetti(); };
+  sec.appendChild(play);
+
+  const hint = document.createElement('p');
+  hint.className = 'sb-hint';
+  hint.textContent = allDone
+    ? '🎓 Anda pemain sebenar sekarang. Lagu ini milik anda!'
+    : 'Setiap 7 nota, frasa baru berbunyi. 30 nota = lagu penuh!';
+  sec.appendChild(hint);
+
+  return sec;
+}
+
+/* ===== app.js ===== */
+/* ============================================================
+   Piano 30 Hari — App: router, renderer & widget interaktif
+   Vanilla JS, tiada framework. Progress disimpan dalam localStorage.
+   ============================================================ */
+(() => {
+  const $app = document.getElementById('app');
+  const LS_DONE = 'p30_done';
+  const timers = { all: [], byWidget: {} };
+
+  /* ---------- util ---------- */
+  const el = (tag, cls, html) => {
+    const e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    return e;
+  };
+  const getDone = () => { try { return JSON.parse(localStorage.getItem(LS_DONE)) || []; } catch (e) { return []; } };
+  const setDone = (arr) => { localStorage.setItem(LS_DONE, JSON.stringify(arr)); };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+  function schedule(widgetId, fn, ms) {
+    const id = setTimeout(() => {
+      (timers.byWidget[widgetId] = timers.byWidget[widgetId] || []).filter(x => x !== id);
+      fn();
+    }, ms);
+    (timers.byWidget[widgetId] = timers.byWidget[widgetId] || []).push(id);
+    timers.all.push(id);
+  }
+  function stopWidget(widgetId) {
+    (timers.byWidget[widgetId] || []).forEach(clearTimeout);
+    timers.byWidget[widgetId] = [];
+  }
+  function stopAllWidgets() { Object.keys(timers.byWidget).forEach(stopWidget); }
+
+  /* ============================================================
+     KEYBOARD BUILDER
+     ============================================================ */
+  function buildKeyboard(loName, hiName, opts) {
+    opts = opts || {};
+    const lo = Audio30.midiOf(loName), hi = Audio30.midiOf(hiName);
+    const whites = [], blacks = [];
+    for (let m = lo; m <= hi; m++) {
+      (Audio30.NAMES[m % 12].length === 1 ? whites : blacks).push(m);
+    }
+    const kb = el('div', 'kb' + (opts.small ? ' small' : ''));
+    kb.dataset.wcount = whites.length;
+    const nW = whites.length;
+    whites.forEach(m => {
+      const k = el('div', 'wk', Audio30.NAMES[m % 12] + (Audio30.NAMES[m % 12] === 'C' ? (Math.floor(m / 12) - 1) : ''));
+      k.dataset.midi = m;
+      kb.appendChild(k);
+    });
+    blacks.forEach(m => {
+      const wi = whites.indexOf(m - 1); // kekunci putih di sebelah kiri
+      const k = el('div', 'bk', Audio30.NAMES[m % 12].replace('#', '♯'));
+      k.dataset.midi = m;
+      k.style.left = ((wi + 1) * 100 / nW - 3.2) + '%';
+      kb.appendChild(k);
+    });
+    if (opts.onKey) {
+      kb.addEventListener('pointerdown', ev => {
+        const key = ev.target.closest('[data-midi]');
+        if (!key) return;
+        const m = +key.dataset.midi;
+        flash(kb, [m], 180);
+        const pm = document.querySelector('.melodi');
+        if (pm) { pm.classList.remove('wiggle'); void pm.offsetWidth; pm.classList.add('wiggle'); }
+        try {
+          Audio30.ensure();
+          Audio30.tone(Audio30.freqOf(m), Audio30.now(), 1.1, 0.5);
+        } catch (e) { /* pelayar tanpa Web Audio */ }
+        if (opts.onKey) opts.onKey(m);
+      });
+    }
+    return kb;
+  }
+  const keyOf = (kb, m) => kb.querySelector('[data-midi="' + m + '"]');
+  function hlKeys(kb, midis, labels) {
+    clearHl(kb);
+    midis.forEach((m, i) => {
+      const k = keyOf(kb, m);
+      if (k) { k.classList.add('hl'); if (labels && labels[i]) k.dataset.lbl = labels[i]; }
+    });
+  }
+  function clearHl(kb) { kb.querySelectorAll('.hl').forEach(k => { k.classList.remove('hl'); delete k.dataset.lbl; }); }
+  function flash(kb, midis, ms) {
+    midis.forEach(m => { const k = keyOf(kb, m); if (k) k.classList.add('hit'); });
+    setTimeout(() => midis.forEach(m => { const k = keyOf(kb, m); if (k) k.classList.remove('hit'); }), ms || 140);
+  }
+  /* julat keyboard yang memuat semua not + ruang sikit */
+  function fitRange(names, pad) {
+    pad = pad == null ? 2 : pad;
+    const midis = names.map(n => Audio30.midiOf(n)).sort((a, b) => a - b);
+    let lo = midis[0] - pad, hi = midis[midis.length - 1] + pad;
+    while (Audio30.NAMES[lo % 12].length > 1) lo--; // snap ke kekunci putih
+    while (Audio30.NAMES[hi % 12].length > 1) hi++;
+    return [Audio30.nameOf(lo), Audio30.nameOf(hi)];
+  }
+
+  /* ============================================================
+     WIDGETS
+     ============================================================ */
+  const W = {};
+
+  /* ---- freeplay ---- */
+  W.freeplay = (w, host, wid) => {
+    const kb = buildKeyboard(w.lo || 'C3', w.hi || 'C6', { onKey: () => {}, small: false });
+    if (w.mark && w.mark.length) {
+      const lo = Audio30.midiOf(w.lo || 'C3'), hi = Audio30.midiOf(w.hi || 'C6');
+      const midis = [];
+      for (let m = lo; m <= hi; m++) if (w.mark.includes(Audio30.NAMES[m % 12])) midis.push(m);
+      hlKeys(kb, midis, midis.map(() => '✨'));
+    }
+    const body = el('div', 'kb-shell'); body.appendChild(kb); host.appendChild(body);
+  };
+
+  /* ---- chord ---- */
+  W.chord = (w, host, wid) => {
+    const chords = w.syms.map(parseChord);
+    const allNotes = chords.flatMap(c => c.notes).concat(chords.filter(c => c.bass).map(c => c.bass));
+    const [lo, hi] = fitRange(allNotes);
+    const kb = buildKeyboard(lo, hi, { small: true });
+    const body = el('div', 'widget-body');
+    const controls = el('div', 'controls');
+
+    function showChord(i, play) {
+      const c = chords[i];
+      const notes = c.bass ? [c.bass].concat(c.notes) : c.notes;
+      hlKeys(kb, notes.map(n => Audio30.midiOf(n)), notes.map((n, j) => j === 0 ? '1' : (j === 1 ? '3' : '5')));
+      controls.querySelectorAll('.chip-btn').forEach((b, j) => b.classList.toggle('active', j === i));
+      if (play) {
+        Audio30.ensure();
+        notes.forEach(n => Audio30.playNote(n, 0, 1.4, 0.34));
+        flash(kb, notes.map(n => Audio30.midiOf(n)), 300);
+      }
+    }
+    chords.forEach((c, i) => {
+      const b = el('button', 'chip-btn', esc(c.sym));
+      b.onclick = () => showChord(i, true);
+      controls.appendChild(b);
+    });
+    if (chords.length > 1) {
+      const all = el('button', 'btn small ghost', '▶ Main ketiga-tiga');
+      all.onclick = () => {
+        stopWidget(wid);
+        chords.forEach((c, i) => {
+          schedule(wid, () => showChord(i, true), i * 1300);
+        });
+      };
+      controls.appendChild(all);
+    }
+    body.appendChild(controls);
+    const shell = el('div', 'kb-shell'); shell.appendChild(kb); body.appendChild(shell);
+    if (w.label) body.appendChild(el('p', 'wsub', esc(w.label)));
+    host.appendChild(body);
+    if (chords.length) showChord(0, false);
+  };
+
+  /* ---- scale ---- */
+  W.scale = (w, host, wid) => {
+    const notes = w.notes;
+    const fingers = w.fingers ? w.fingers.split('-') : null;
+    const [lo, hi] = fitRange(notes, 1);
+    const kb = buildKeyboard(lo, hi, { small: true });
+    const body = el('div', 'widget-body');
+    const controls = el('div', 'controls');
+    const btn = el('button', 'btn', '▶ Main ' + (w.label ? 'skala' : 'urutan'));
+    const dt = 0.48;
+    btn.onclick = () => {
+      stopWidget(wid); Audio30.ensure();
+      clearHl(kb);
+      notes.forEach((n, i) => {
+        Audio30.playNote(n, i * dt, dt * 1.4, 0.5);
+        schedule(wid, () => hlKeys(kb, [Audio30.midiOf(n)], fingers ? [fingers[i]] : null), i * dt * 1000);
+      });
+      schedule(wid, () => clearHl(kb), notes.length * dt * 1000 + 900);
+    };
+    controls.appendChild(btn);
+    if (w.label) controls.appendChild(el('span', 'wsub', esc(w.label)));
+    body.appendChild(controls);
+    const shell = el('div', 'kb-shell'); shell.appendChild(kb); body.appendChild(shell);
+    if (w.desc) body.appendChild(el('p', 'wsub', esc(w.desc)));
+    host.appendChild(body);
+  };
+
+  /* ---- prog / jam (chord progression + pattern) ---- */
+  function progEvents(chordSyms, pattern, bpm, loopBars) {
+    const beat = 60 / bpm;
+    const beatsPerBar = pattern === 'waltz' ? 3 : 4;
+    const barLen = beat * beatsPerBar;
+    const ev = []; // {t, notes, dur, vol}
+    const bars = [];
+    for (let b = 0; b < loopBars; b++) bars.push(chordSyms[b % chordSyms.length]);
+    bars.forEach((sym, bi) => {
+      const c = parseChord(sym);
+      const root3 = Audio30.nameOf(Audio30.midiOf(c.root + '3'));
+      const t0 = bi * barLen;
+      bars[bi] = { sym, c, t0, barLen };
+      if (pattern === 'block') {
+        ev.push({ t: t0, notes: [root3].concat(c.notes), dur: barLen, vol: 0.34 });
+      } else if (pattern === 'beat8') {
+        for (let k = 0; k < 8; k++) {
+          const bassHit = k % 2 === 0;
+          ev.push({
+            t: t0 + k * beat / 2,
+            notes: bassHit ? [root3] : c.notes,
+            dur: beat * 0.7, vol: bassHit ? 0.42 : 0.26
+          });
+        }
+      } else if (pattern === 'waltz') {
+        ev.push({ t: t0, notes: [root3], dur: beat * 0.95, vol: 0.42 });
+        ev.push({ t: t0 + beat, notes: c.notes, dur: beat * 0.9, vol: 0.26 });
+        ev.push({ t: t0 + beat * 2, notes: c.notes, dur: beat * 0.9, vol: 0.26 });
+      } else if (pattern === 'arp') {
+        const seq = [root3, c.notes[1], c.notes[2], c.notes[1]];
+        seq.forEach((n, k) => ev.push({ t: t0 + k * beat, notes: [n], dur: beat * 1.1, vol: 0.38 }));
+      }
+    });
+    return { ev, bars, barLen, total: loopBars * barLen };
+  }
+
+  W.prog = W.jam = (w, host, wid) => {
+    const pattern = w.pattern || 'block';
+    const bpm = w.bpm || 80;
+    const loopBars = w.loop || 8;
+    const chords = w.chords.map(parseChord);
+    const allNotes = chords.flatMap(c => c.notes);
+    const [lo, hi] = fitRange(allNotes.concat(chords.map(c => Audio30.midiOf(c.root + '3') + '' ? Audio30.nameOf(Audio30.midiOf(c.root + '3')) : '')), 2);
+    const kb = buildKeyboard(lo, hi, { small: true });
+    const body = el('div', 'widget-body');
+    const controls = el('div', 'controls');
+
+    if (w.chartTitle) body.appendChild(el('p', 'wtitle', esc(w.chartTitle)));
+    if (w.splitLabels) {
+      const lg = el('div', 'controls');
+      w.splitLabels.forEach((s, i) => lg.appendChild(el('span', 'pill', esc(s))));
+      body.appendChild(lg);
+    }
+
+    const playBtn = el('button', 'btn', '▶ Main');
+    const stopBtn = el('button', 'btn small ghost', '■ Stop');
+    stopBtn.style.display = 'none';
+    playBtn.onclick = () => {
+      stopWidget(wid); Audio30.ensure();
+      const { ev, bars, total } = progEvents(w.chords, pattern, bpm, loopBars);
+      ev.forEach(e => {
+        e.notes.forEach(n => Audio30.playNote(n, e.t, e.dur, e.vol));
+        schedule(wid, () => flash(kb, e.notes.map(n => Audio30.midiOf(n)), 150), e.t * 1000);
+      });
+      bars.forEach(b => {
+        schedule(wid, () => hlKeys(kb, b.c.notes.map(n => Audio30.midiOf(n)), null), b.t0 * 1000);
+      });
+      schedule(wid, () => { clearHl(kb); playBtn.style.display = ''; stopBtn.style.display = 'none'; }, total * 1000 + 600);
+      playBtn.style.display = 'none'; stopBtn.style.display = '';
+    };
+    stopBtn.onclick = () => { stopWidget(wid); clearHl(kb); playBtn.style.display = ''; stopBtn.style.display = 'none'; };
+    controls.appendChild(playBtn); controls.appendChild(stopBtn);
+    controls.appendChild(el('span', 'wsub', pattern.toUpperCase() + ' · ' + bpm + ' BPM · ' + w.chords.join(' – ')));
+    body.appendChild(controls);
+
+    const shell = el('div', 'kb-shell'); shell.appendChild(kb); body.appendChild(shell);
+
+    if (w.notes && w.notes.length) { // widget jam: serlahkan not pentatonic
+      hlKeys(kb, w.notes.map(n => Audio30.midiOf(n)), w.notes.map(() => '★'));
+    }
+    if (w.pedalHint) body.appendChild(el('p', 'wsub', 'Petua pedal: angkat & tekan semula pada setiap pertukaran chord.'));
+    host.appendChild(body);
+  };
+
+  /* ---- song ---- */
+  W.song = (w, host, wid) => {
+    const song = SONGS[w.id];
+    const bpm = song.bpm || 90;
+    const beat = 60 / bpm;
+    const midis = song.notes.map(x => Audio30.midiOf(x[0]));
+    const [lo, hi] = fitRange(song.notes.map(x => x[0]), 2);
+    const kb = buildKeyboard(lo, hi, { small: true, onKey: null });
+    const body = el('div', 'widget-body');
+    const controls = el('div', 'controls');
+    const playBtn = el('button', 'btn', '▶ Main lagu');
+    const stopBtn = el('button', 'btn small ghost', '■ Stop');
+    stopBtn.style.display = 'none';
+
+    const strip = el('div', 'strip');
+    song.notes.forEach(x => strip.appendChild(el('span', null, esc(x[0]))));
+
+    playBtn.onclick = () => {
+      stopWidget(wid); Audio30.ensure();
+      const backing = song.chords ? progEvents(song.chords, 'block', bpm, song.chords.length) : null;
+      if (backing) backing.ev.forEach(e => e.notes.forEach(n => Audio30.playNote(n, e.t, e.dur, 0.20)));
+      let t = 0;
+      song.notes.forEach((x, i) => {
+        const [name, len] = x;
+        Audio30.playNote(name, t, Math.min(len * beat * 0.92, beat * 3), 0.5);
+        const at = t;
+        schedule(wid, () => {
+          clearHl(kb);
+          hlKeys(kb, [midis[i]], null);
+          flash(kb, [midis[i]], Math.min(len * beat * 800, 600));
+          strip.querySelectorAll('span').forEach((s, j) => s.classList.toggle('on', j === i));
+        }, at * 1000);
+        t += len * beat;
+      });
+      schedule(wid, () => {
+        clearHl(kb);
+        strip.querySelectorAll('span').forEach(s => s.classList.remove('on'));
+        playBtn.style.display = ''; stopBtn.style.display = 'none';
+      }, t * 1000 + 700);
+      playBtn.style.display = 'none'; stopBtn.style.display = '';
+    };
+    stopBtn.onclick = () => { stopWidget(wid); clearHl(kb); strip.querySelectorAll('span').forEach(s => s.classList.remove('on')); playBtn.style.display = ''; stopBtn.style.display = 'none'; };
+    controls.appendChild(playBtn); controls.appendChild(stopBtn);
+    controls.appendChild(el('span', 'wsub', esc(song.title) + ' · ' + bpm + ' BPM'));
+    body.appendChild(controls);
+    const shell = el('div', 'kb-shell'); shell.appendChild(kb); body.appendChild(shell);
+    body.appendChild(strip);
+    host.appendChild(body);
+  };
+
+  /* ---- metronome ---- */
+  W.metro = (w, host, wid) => {
+    const body = el('div', 'widget-body');
+    const controls = el('div', 'controls');
+    let bpm = w.bpm || 80;
+    let playing = false, beatNo = 0, interval = null;
+
+    const playBtn = el('button', 'btn', '▶ Main metronome');
+    const slider = el('input'); slider.type = 'range'; slider.min = 40; slider.max = 180; slider.value = bpm;
+    const val = el('span', 'bpm-val', bpm + '');
+    const lamp = el('span', 'lamp');
+    slider.oninput = () => {
+      bpm = +slider.value; val.textContent = bpm;
+      if (playing) { stop(); start(); }
+    };
+    function tick() {
+      const accent = beatNo % 4 === 0;
+      Audio30.click(0, accent);
+      lamp.classList.add('on');
+      setTimeout(() => lamp.classList.remove('on'), 70);
+      beatNo++;
+    }
+    function start() {
+      Audio30.ensure();
+      playing = true; beatNo = 0;
+      tick();
+      interval = setInterval(tick, 60000 / bpm);
+      playBtn.textContent = '■ Stop';
+    }
+    function stop() {
+      playing = false;
+      if (interval) clearInterval(interval); interval = null;
+      playBtn.textContent = '▶ Main metronome';
+    }
+    playBtn.onclick = () => playing ? stop() : start();
+    controls.appendChild(playBtn);
+    controls.appendChild(lamp);
+    controls.appendChild(slider);
+    controls.appendChild(val);
+    controls.appendChild(el('span', 'wsub', 'BPM'));
+    body.appendChild(controls);
+    host.appendChild(body);
+  };
+
+  /* ---- check ---- */
+  W.check = (w, host, wid) => {
+    const body = el('div', 'widget-body');
+    const key = 'p30_check_' + (w.id || wid);
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(key)) || []; } catch (e) {}
+    w.items.forEach((item, i) => {
+      const row = el('div', 'check-item' + (saved[i] ? ' done' : ''));
+      const cb = el('input'); cb.type = 'checkbox'; cb.checked = !!saved[i];
+      const lb = el('label', null, esc(item));
+      const toggle = () => {
+        saved[i] = cb.checked;
+        localStorage.setItem(key, JSON.stringify(saved));
+        row.classList.toggle('done', cb.checked);
+      };
+      cb.onchange = toggle;
+      row.appendChild(cb); row.appendChild(lb);
+      body.appendChild(row);
+    });
+    host.appendChild(body);
+  };
+
+  /* ============================================================
+     RENDER
+     ============================================================ */
+  function renderHeader() {
+    const done = getDone().length;
+    const pct = Math.round(done / DAYS.length * 100);
+    document.getElementById('pbar').style.width = pct + '%';
+    document.getElementById('plabel').textContent = done + '/30 hari · ' + pct + '%';
+  }
+
+  function renderHome() {
+    stopAllWidgets();
+    const done = getDone();
+    const firstOpen = DAYS.find(d => !done.includes(d.n)) || DAYS[DAYS.length - 1];
+    const app = el('div');
+    if (window.P30Melodi) app.appendChild(P30Melodi(P30HomeGreeting(), {}));
+    app.appendChild(el('div', 'hero',
+      '<div class="kicker">Ebook interaktif · belajar sendiri · tanpa guru</div>' +
+      '<h1>Belajar Main Piano & Keyboard<br>— <em>30 Hari</em></h1>' +
+      '<p class="lead">Dari kosong terus ke lagu kegemaran anda. Fokus <b>chord &amp; chord progression</b> — cara paling pantas main lagu sebenar tanpa perlu membaca nota staf. Percuma, mengikut rentak sendiri, untuk semua umur.</p>' +
+      '<div class="stats">' +
+        '<span class="pill"><b>30</b> hari berstruktur</span>' +
+        '<span class="pill"><b>8+</b> chord &amp; progression</span>' +
+        '<span class="pill"><b>5</b> lagu repertoir</span>' +
+        '<span class="pill">🎹 keyboard interaktif bawa sendiri</span>' +
+      '</div>'));
+    const cta = el('div', 'controls');
+    cta.style.margin = '10px 0 6px';
+    const start = el('button', 'btn', done.length ? '▶ Terus Hari ' + firstOpen.n : '▶ Mula Hari 1 — percuma!');
+    start.onclick = () => { location.hash = '#/hari-' + firstOpen.n; };
+    cta.appendChild(start);
+    app.appendChild(cta);
+    if (window.P30SongBoard) app.appendChild(P30SongBoard());
+
+    let curWeek = 0;
+    DAYS.forEach(d => {
+      if (d.week !== curWeek) {
+        curWeek = d.week;
+        const wk = WEEKS[curWeek];
+        app.appendChild(el('div', 'week-band', '<h2>Minggu ' + curWeek + ' — ' + esc(wk.title) + '</h2><span class="wk-sub">' + esc(wk.sub) + '</span>'));
+        app.appendChild(el('hr', 'week-line'));
+      }
+      const card = el('a', 'day-card' + (done.includes(d.n) ? ' is-done' : ''));
+      card.href = '#/hari-' + d.n;
+      card.innerHTML = (done.includes(d.n) ? '<span class="done-badge">✓</span>' : '') +
+        '<span class="num">Hari ' + d.n + '</span><h3>' + d.emoji + ' ' + esc(d.title) + '</h3><p>' + esc(d.goal) + '</p>';
+      app.appendChild(card);
+    });
+    $app.innerHTML = '';
+    $app.appendChild(app);
+    renderHeader();
+    window.scrollTo(0, 0);
+  }
+
+  function renderDay(n) {
+    stopAllWidgets();
+    const d = DAYS.find(x => x.n === n);
+    if (!d) { renderHome(); return; }
+    const done = getDone();
+    const app = el('div');
+    app.appendChild(el('div', 'crumb', '<a href="#/">← Rak Hari</a> &nbsp;·&nbsp; <span>Minggu ' + d.week + ' — ' + esc(WEEKS[d.week].title) + '</span>'));
+    const head = el('div', 'day-head',
+      '<div class="num">Hari ' + d.n + ' dari 30</div><h1>' + d.emoji + ' ' + esc(d.title) + '</h1>' +
+      '<div class="goal"><b>🎯 Matlamat hari ini:</b> ' + esc(d.goal) + '</div>');
+    app.appendChild(head);
+    if (window.P30Melodi) app.appendChild(P30Melodi(P30ChatDay(n), {}));
+
+    d.secs.forEach((s, i) => {
+      const sec = el('section', 'lesson');
+      sec.appendChild(el('h2', null, '<span class="no">' + (i + 1) + '</span>' + esc(s.h)));
+      const body = el('div', null, s.body);
+      sec.appendChild(body);
+      if (s.w) {
+        const wid = 'd' + n + 's' + i;
+        const widget = el('div', 'widget');
+        const title = ({
+          freeplay: '🎹 Keyboard — cuba sendiri', chord: '🎼 Chord player', scale: '🪜 Scale player',
+          prog: '🎶 Progression player', song: '🎵 Song player', metro: '🥁 Metronome',
+          check: '✅ Senarai semak', jam: '🔥 Jam — main bebas'
+        })[s.w.t] || 'Widget';
+        widget.appendChild(el('div', 'widget-head', '<span class="wtitle">' + title + '</span>'));
+        (W[s.w.t] || (h => {}))(s.w, widget, wid);
+        sec.appendChild(widget);
+      }
+      app.appendChild(sec);
+    });
+
+    if (window.P30QuizWidget) app.appendChild(P30QuizWidget(n));
+    app.appendChild(el('div', 'tip', '<b>📋 ' + esc(d.practice) + '</b>'));
+
+    /* butang selesai */
+    const fin = el('div', 'finish');
+    const finBtn = el('button', 'btn done-btn' + (done.includes(n) ? ' is-done' : ''),
+      done.includes(n) ? '✓ Hari ini selesai — teruskan!' : '✓ Tandakan Hari ' + n + ' selesai');
+    finBtn.onclick = () => {
+      const cur = getDone();
+      const idx = cur.indexOf(n);
+      if (idx >= 0) cur.splice(idx, 1); else cur.push(n);
+      setDone(cur.sort((a, b) => a - b));
+      renderHeader();
+      const isDone = cur.includes(n);
+      finBtn.classList.toggle('is-done', isDone);
+      finBtn.textContent = isDone ? '✓ Hari ini selesai — teruskan!' : '✓ Tandakan Hari ' + n + ' selesai';
+      if (isDone && window.P30OnDayDone) P30OnDayDone(n);
+    };
+    fin.appendChild(finBtn);
+    fin.appendChild(el('p', null, 'Progress disimpan dalam pelayar anda — balik semula bila-bila masa.'));
+    app.appendChild(fin);
+
+    /* nav hari */
+    const nav = el('div', 'day-nav');
+    if (n > 1) {
+      const p = DAYS.find(x => x.n === n - 1);
+      nav.appendChild(el('a', null, '<div class="dir">← Sebelum</div><b>Hari ' + p.n + ': ' + esc(p.title) + '</b>')).href = '#/hari-' + (n - 1);
+    }
+    if (n < 30) {
+      const nx = DAYS.find(x => x.n === n + 1);
+      const a = el('a', 'next', '<div class="dir">Seterusnya →</div><b>Hari ' + nx.n + ': ' + esc(nx.title) + '</b>');
+      a.href = '#/hari-' + (n + 1);
+      nav.appendChild(a);
+    }
+    app.appendChild(nav);
+
+    $app.innerHTML = '';
+    $app.appendChild(app);
+    renderHeader();
+    window.scrollTo(0, 0);
+  }
+
+  function route() {
+    const m = /^#\/hari-(\d+)/.exec(location.hash);
+    if (m) renderDay(+m[1]); else renderHome();
+  }
+  window.addEventListener('hashchange', route);
+  route();
+})();
+
+</script>
+</body>
+</html>
