@@ -5,6 +5,32 @@ Disaster management: repo git lokal di sini (persistent /opt/data) + semua keput
 
 ---
 
+## 2026-10-29 (Thu) — v1.1: MELODI 🎵 + KUIZ
+
+**Update (request user — "elemen kuiz dan animated pesona yang comel"):**
+
+1. **Melodi** — pesona nota muzik comel, 100% CSS-animated (tiada imej):
+   - Body blob float + shadow, mata blink (4.4s cycle), cheek blush, tangan kecil, antena ♪ sway
+   - Ekspresi: HAPPY (jump + arms up + hearts float), SAD (droop + eyes lid + frown), WIGGLE (bila user tekan kekunci — semua keyboard)
+   - Bubble ucapan: home (progress-aware greeting) + setiap hari (30 mesej unik BM)
+   - Fail: webapp/js/melodi.js (P30Melodi(), P30_CHAT, P30_HOME_GREET)
+2. **Kuiz** — 2 soalan × 30 hari = 60 soalan BM (op syen di-shuffle setiap render):
+   - Jawapan betul: hijau + sfx arpeggio happy + Melodi happy + huraian
+   - Jawap salah: shake merah + jawapan betul ditunjuk + sfx rendah + Melodi sad
+   - Skor akhir + best score persist (localStorage p30_quiz_dN) + retry
+   - Fail: webapp/js/melodi.js (P30_QUIZ, P30QuizWidget()) — integrasi app.js: quiz sebelum practice tip setiap hari
+
+**Bug dijumpai & fix semasa build:**
+- build.py regex tak match 4 script tags selepas tambah melodi.js → build 20KB tanpa JS! Fix pattern. LESSON: sentiasa check size + sanity build selepas ubah struktur fail.
+- Patch app.js tersilap delete line `d.secs.forEach(` → lint catch (node --check). Fixed + tambah quiz hook.
+- jsdom tiada AudioContext → wiggle test fail → harden: wiggle sebelum audio + audio dalam try/catch (bonus: app kini tahan pelayar lama tanpa Web Audio).
+
+**Verifikasi v1.1:** suite jsdom 28 test → **28/28 LULUS** (melodi render semua 30 hari, kuiz render semua 30 hari, correct/wrong/sad/happy/skor/localStorage semua betul). NOTE: browser harness rosak masa ni (remote WS down + Chromium local tiada) — jsdom jadi kaedah verify. Live: HTTP 200, 113,308 bytes (exact match build), P30_QUIZ + m-hearts confirmed dalam HTML served.
+
+**Deploy:** commit 024772a (main) + 6e184ee (gh-pages) — via tools/deploy.sh. Git identity repo set: kimieventures <kimieventures@gmail.com>.
+
+---
+
 ## 2026-10-29 (Thu) — DEPLOY SIAP 🚀 — LIVE di GitHub Pages
 
 **URL:** https://kimieventures.github.io/piano-30hari/
