@@ -5,6 +5,30 @@ Disaster management: repo git lokal di sini (persistent /opt/data) + semua keput
 
 ---
 
+## 2026-10-29 (Thu) — v1.2: LAGU MELODI 🎵 — sistem mata & papan lagu
+
+**Request user:** point system — mata dari kuiz contribute kepada sesuatu (contoh dia: anak benih → pokok berbuah). Soalan dia: untuk muzik apa metafora paling sesuai?
+
+**Keputusan design (jawapan Zizi):** muzik punya reward semulajadi = **LAGU**. Jadi metafora: **30 hari = 30 nota yang MEMBINA "Lagu Melodi"** (lagu asli AABA+koda di atas C-G-Am-F). Nota terbuka bila hari selesai; kualiti nota dari skor kuiz (locked → plain → silver 1/2 → GOLD 2/2 + ★). Milestone 7/14/21/30 → melodi terkumpul DIMAINKAN sebenar (Web Audio) + backing chord frasa. 30/30 → lagu penux + confetti + badge graduation. Lebih sesuai dari pokok sebab: reward = kemahiran (lagu), progres BOLEH DIDENGAR, kuiz jadi bermakna (nota emas). Skin boleh tukar (pokok dsb.) tanpa ubah sistem mata.
+
+**Implementasi (semua dalam melodi.js + app.js hook + CSS):**
+- SONG_MELODI (30 nota asli), SONG_CHORDS (bass frasa: C G Am F C)
+- p30NoteState(d) → locked/plain/silver/gold dari localStorage (p30_done + p30_quiz_dN)
+- P30SongBoard() — papan lagu di home: 30 nota (stem+★ gold), pemisah M1-M4, 3 stats (nota/mata/emas), 4 badge milestone, butang main
+- P30PlaySong(count) — main nota terkumpul + chord backing, nota pulse satu-satu, Melodi "conducting" (wiggle loop)
+- P30OnDayDone(n) — dipanggil app.js bila tandakan selesai: bubble update ("Nota ke-8 terbuka!"), Melodi happy; milestone → auto-play + confetti (30)
+- P30Confetti() — 44 piece CSS fall, auto-remove 5s
+
+**Lesson penting (testing):** jsdom AUTO-fire hashchange bila location.hash berubah — dispatchEvent manual = DOUBLE render = elemen diganti selepas sync check → mula nampak macam "bug animasi". Fix: navigasi test guna set hash + sleep, bukan dispatch manual. Jangan agak — instrument dulu (debug3.js).
+
+**Verifikasi:** test2.js (28 test baru) + test.js (28 regression) = **56/56 LULUS** — state locked/plain/silver/gold, stats, badge, milestone bubble (8 & 14), confetti, conducting, playback pulse, kuiz regression. Live: HTTP 200, 124,307 bytes exact, SONG_MELODI + songboard confirmed dalam HTML served (propagasi ~70s).
+
+**Deploy:** df50488 (main) + 2e79fd1 (gh-pages) via tools/deploy.sh.
+
+**Roadmap interaktif (cadangan belum buat):** computer-keyboard mapping (A-L), rakam mainan sendiri (MediaRecorder), ear-training "dengar & teka chord", MIDI input, share progress card, Stripe paywall minggu 3-4.
+
+---
+
 ## 2026-10-29 (Thu) — v1.1: MELODI 🎵 + KUIZ
 
 **Update (request user — "elemen kuiz dan animated pesona yang comel"):**
