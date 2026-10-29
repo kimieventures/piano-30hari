@@ -5,6 +5,37 @@ Disaster management: repo git lokal di sini (persistent /opt/data) + semua keput
 
 ---
 
+## 2026-10-29 (Thu) — DEPLOY SIAP 🚀 — LIVE di GitHub Pages
+
+**URL:** https://kimieventures.github.io/piano-30hari/
+**Repo:** https://github.com/kimieventures/piano-30hari (public; account business kimieventures, BUKAN kimie77)
+
+**Cara (tiada secret dalam chat):**
+- GitHub device authorization via gh CLI v2.103.3 (binary di /tmp — ephemeral, muat turun semula bila box restart)
+- User approve device code dalam browser dia → token tersimpan dalam gh hosts (plain text, /opt/data/.config/gh — nota keselamatan)
+- Scopes: gist, read:org, repo
+
+**Langkah deploy:**
+1. `gh repo create kimieventures/piano-30hari --public`
+2. Push main (source + docs + JOURNAL)
+3. Branch `gh-pages` (orphan): dist/piano30hari.html → index.html, push
+4. GitHub Pages auto-enable dari branch gh-pages → URL live
+
+**Verifikasi LIVE (browser sebenar):** HTTP 200, 85KB, 30 kad render, Hari 9 chord player — klik chip F → highlight midis 65/69/72 (F4/A4/C5 betul), **zero JS errors**. Propagasi DNS Pages ambil ~1 minit (404 → 200).
+
+**Update akan datang:** `bash tools/deploy.sh` (satu command: build → push main → rebuild gh-pages).
+
+**Keputusan user hari ini:**
+- Gunakan account business kimieventures@gmail.com untuk semua benda projek ini (bukan kimie77 personal)
+- Stripe account ada (connector stripe_mcp active) — untuk monetization nanti (macam Rak Modul: trial + Payment Link)
+- GAS deploy (macam Rak Modul) ditunda — Pages dulu; fail sama (dist/piano30hari.html) boleh paste ke GAS bila nak
+
+**Nota:**
+- Repo public sebab Pages percuma perlukan repo public. Kandungan ebook memang untuk umum — OK.
+- gh-pages branch hanya ada index.html (build). Source of truth = main.
+
+---
+
 ## 2026-10-29 (Thu) — BUILD v1 SIAP & TERVERIFIKASI ✅
 
 **Apa siap:**
