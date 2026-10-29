@@ -403,3 +403,84 @@ footer.site b { color: var(--ink); }
 .q-end p { margin-top: 8px; font-size: 15px; }
 .q-meta { margin-top: 6px; font-size: 12.5px; color: var(--muted); letter-spacing: .5px; }
 @keyframes q-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ============================================================
+   PAPAN LAGU MELODI — sistem mata (nota → lagu penuh)
+   ============================================================ */
+.songboard {
+  background: #fff; border: 1.5px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--shadow-lg); padding: 20px 22px 22px; margin: 26px 0 8px;
+  position: relative; overflow: hidden;
+}
+.songboard::before {
+  content: '♪ ♫ ♪'; position: absolute; right: 14px; top: 6px;
+  font-size: 30px; color: var(--line); letter-spacing: 6px; pointer-events: none;
+}
+.sb-head .wtitle { font-family: var(--serif); font-size: 21px; font-weight: 700; }
+.sb-head .wsub { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+.sb-stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
+
+.sb-board { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.snote {
+  position: relative; width: 30px; height: 30px; flex: none;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transition: transform .15s ease;
+}
+.snote::after { /* batang nota */
+  content: ''; position: absolute; right: -4px; top: -12px;
+  width: 2.5px; height: 26px; border-radius: 3px; background: inherit;
+}
+.snote.locked {
+  background: transparent; border: 2px dashed #D8D2C4; box-sizing: border-box;
+}
+.snote.locked::after { background: #D8D2C4; opacity: .6; }
+.snote.plain { background: #B8AE9C; }
+.snote.silver {
+  background: #A9B0B8;
+  box-shadow: inset -3px -3px 0 rgba(42,35,27,.12), inset 3px 3px 0 rgba(255,255,255,.55);
+}
+.snote.gold {
+  background: var(--gold);
+  box-shadow: inset -3px -3px 0 rgba(143,110,26,.35), inset 3px 3px 0 rgba(255,255,255,.6);
+}
+.snote.gold::before {
+  content: '★'; position: absolute; top: -16px; right: -6px;
+  font-size: 11px; color: var(--gold);
+  animation: m-sway 2.4s ease-in-out infinite;
+}
+.snote.playing { transform: translateY(-7px) scale(1.22); z-index: 3; }
+.snote:not(.locked):hover { transform: translateY(-4px) scale(1.12); cursor: default; }
+
+.sb-week {
+  font-size: 10.5px; font-weight: 800; letter-spacing: 1px; color: var(--accent);
+  border: 1.5px solid var(--accent); border-radius: 99px; padding: 2px 8px;
+  flex: none; margin: 0 3px;
+}
+.sb-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 14px; }
+.sb-badge {
+  font-size: 12.5px; font-weight: 700; color: var(--muted);
+  background: var(--bg2); border: 1.5px solid var(--line);
+  border-radius: 99px; padding: 5px 13px;
+}
+.sb-badge.reached { color: var(--accent-dark); border-color: var(--accent); background: var(--accent-soft); }
+.sb-badge.grad { color: #fff; background: var(--ok); border-color: var(--ok); box-shadow: 0 2px 8px rgba(76,122,79,.35); }
+.sb-hint { font-size: 13.5px; color: var(--muted); margin-top: 10px; }
+.m-bubble.pop { animation: sb-pop .45s ease; }
+@keyframes sb-pop { 0% { transform: scale(.92); } 55% { transform: scale(1.04); } 100% { transform: scale(1); } }
+
+.melodi.conducting { animation: none; }
+.melodi.conducting .m-body { animation: m-wiggle .5s ease infinite; }
+.melodi.conducting .m-note { animation: m-sway .5s ease-in-out infinite; }
+
+/* Confetti */
+.p30-confetti {
+  position: fixed; inset: 0; z-index: 200; pointer-events: none; overflow: hidden;
+}
+.p30-confetti span {
+  position: absolute; top: -20px; border-radius: 2px;
+  animation-name: p30-fall; animation-timing-function: linear; animation-fill-mode: forwards;
+}
+@keyframes p30-fall {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: .7; }
+}

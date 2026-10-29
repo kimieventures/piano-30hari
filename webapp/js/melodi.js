@@ -341,3 +341,188 @@ function P30QuizWidget(n) {
   renderQ();
   return w;
 }
+
+/* ============================================================
+   LAGU MELODI 🎵 — sistem mata: hari selesai + kuiz = NOTA
+   30 hari = 30 nota. Mata kuiz tentukan kualiti nota:
+   locked → plain (hari siap, kuiz belum) → silver (1/2) → gold (2/2)
+   Milestone 7/14/21/30: melodi terkumpul DIMAINKAN sebenar.
+   30/30: lagu penuh + confetti + graduation! 🎓
+   ============================================================ */
+
+/* Lagu asli Piano 30 Hari — AABA + koda, di atas dunia chord kita */
+const SONG_MELODI = [
+  'E4','G4','A4','G4','E4','D4','C4',          // Frasa 1 (M1) — C
+  'E4','G4','A4','G4','E4','D4','C4',          // Frasa 2 (M2) — G
+  'A4','C5','B4','A4','G4','E4','G4',         // Frasa 3 (M3) — Am
+  'E4','G4','A4','G4','E4','D4','C4',         // Frasa 4 (M4) — F
+  'D4','C4'                                    // koda — C (pulang)
+];
+const SONG_CHORDS = { 0: 'C', 7: 'G', 14: 'Am', 21: 'F', 28: 'C' }; // bass di frasa
+
+function p30NoteState(day) {
+  let done = false;
+  try { done = (JSON.parse(localStorage.getItem('p30_done')) || []).includes(day); } catch (e) {}
+  if (!done) return 'locked';
+  let best = 0;
+  try { best = +localStorage.getItem('p30_quiz_d' + day) || 0; } catch (e) {}
+  if (best >= 2) return 'gold';
+  if (best === 1) return 'silver';
+  return 'plain';
+}
+function P30MataTotal() {
+  let t = 0;
+  for (let d = 1; d <= 30; d++) { try { t += +localStorage.getItem('p30_quiz_d' + d) || 0; } catch (e) {} }
+  return t;
+}
+function P30UnlockedCount() {
+  let n = 0;
+  for (let d = 1; d <= 30; d++) if (p30NoteState(d) !== 'locked') n++;
+  return n;
+}
+
+/* Main melodi terkumpul (nota 1..count) + backing chord di frasa */
+function P30PlaySong(count) {
+  count = Math.min(count, 30);
+  const dt = 0.42;
+  try {
+    Audio30.ensure();
+    for (let i = 0; i < count; i++) {
+      const t = i * dt;
+      Audio30.playNote(SONG_MELODI[i], t, dt * 1.35, 0.5);
+      const ch = SONG_CHORDS[i];
+      if (ch) {
+        const c = parseChord(ch);
+        Audio30.playNote(Audio30.nameOf(Audio30.midiOf(c.root + '3')), t, dt * 7, 0.22);
+        c.notes.forEach(n => Audio30.playNote(n, t, dt * 7, 0.14));
+      }
+    }
+  } catch (e) { /* pelayar tanpa Web Audio */ }
+  /* animasi nota di papan jika ada */
+  const notes = document.querySelectorAll('.snote');
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const n = notes[i];
+      if (!n) return;
+      n.classList.add('playing');
+      setTimeout(() => n.classList.remove('playing'), 380);
+    }, i * dt * 1000);
+  }
+  /* Melodi "menunjuk tangan" semasa lagu bermain */
+  const m = document.querySelector('.melodi-row:not(.in-head) .melodi') || document.querySelector('.melodi');
+  if (m) {
+    const dur = count * dt * 1000;
+    m.classList.add('conducting');
+    setTimeout(() => m.classList.remove('conducting'), dur);
+  }
+}
+
+/* Confetti — CSS sahaja, auto-buang */
+function P30Confetti() {
+  const c = document.createElement('div');
+  c.className = 'p30-confetti';
+  const colors = ['#B4531F', '#C99A3C', '#4C7A4F', '#E4584C', '#5B7059'];
+  for (let i = 0; i < 44; i++) {
+    const s = document.createElement('span');
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDelay = (Math.random() * 1.2) + 's';
+    s.style.animationDuration = (2.2 + Math.random() * 1.6) + 's';
+    s.style.width = s.style.height = (6 + Math.random() * 7) + 'px';
+    c.appendChild(s);
+  }
+  document.body.appendChild(c);
+  setTimeout(() => c.remove(), 5000);
+}
+
+/* Callback selepas user tandakan hari SELESAI (dipanggil app.js) */
+function P30OnDayDone(n) {
+  let count = 0;
+  try { count = (JSON.parse(localStorage.getItem('p30_done')) || []).length; } catch (e) {}
+  const bubble = document.querySelector('.melodi-row:not(.in-head) .m-bubble');
+  const melodi = document.querySelector('.melodi-row:not(.in-head) .melodi');
+  const milestone = count === 7 || count === 14 || count === 21 || count === 30;
+  if (bubble) {
+    bubble.textContent = count >= 30
+      ? '🎓 LAGU MELODI LENGKAP! Dengar — lagu yang ANDA bina, dari nota pertama hingga terakhir!'
+      : milestone
+        ? '🌟 Milestone ' + count + ' nota! Dengar melodi yang anda bina~'
+        : 'Nota ke-' + count + ' terbuka dalam Lagu Melodi! 🎵';
+    bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+  }
+  if (melodi) melodi._set('happy', 2600);
+  if (milestone) {
+    setTimeout(() => { P30PlaySong(count); if (count >= 30) P30Confetti(); }, 700);
+  }
+}
+
+/* ---------- PAPAN LAGU (halaman utama) ---------- */
+function P30SongBoard() {
+  const sec = document.createElement('section');
+  sec.className = 'songboard';
+
+  const unlocked = P30UnlockedCount();
+  const mata = P30MataTotal();
+  const allDone = unlocked >= 30;
+
+  const head = document.createElement('div');
+  head.className = 'sb-head';
+  head.innerHTML =
+    '<div><div class="wtitle">🎵 Lagu Melodi — lagu yang anda bina</div>' +
+    '<div class="wsub">Hari selesai buka nota · jawapan kuiz betul jadikan nota EMAS</div></div>';
+  sec.appendChild(head);
+
+  const stats = document.createElement('div');
+  stats.className = 'sb-stats';
+  stats.innerHTML =
+    '<span class="pill">Nota dibuka: <b>' + unlocked + '/30</b></span>' +
+    '<span class="pill">Mata kuiz: <b>' + mata + '/60</b></span>' +
+    '<span class="pill">Nota emas: <b>' + (function () { let g = 0; for (let d = 1; d <= 30; d++) if (p30NoteState(d) === 'gold') g++; return g; })() + '</b></span>';
+  sec.appendChild(stats);
+
+  const board = document.createElement('div');
+  board.className = 'sb-board';
+  for (let d = 1; d <= 30; d++) {
+    const st = p30NoteState(d);
+    const note = document.createElement('span');
+    note.className = 'snote ' + st;
+    note.dataset.day = d;
+    note.title = 'Hari ' + d + (st === 'locked' ? ' — selesaikan hari untuk buka nota' : ' — nota terbuka');
+    board.appendChild(note);
+    if (d % 7 === 0 && d < 30) {
+      const sep = document.createElement('span');
+      sep.className = 'sb-week';
+      sep.textContent = 'M' + (d / 7);
+      board.appendChild(sep);
+    }
+  }
+  sec.appendChild(board);
+
+  const badges = document.createElement('div');
+  badges.className = 'sb-badges';
+  [[7, 'Frasa 1'], [14, 'Separuh Lagu'], [21, 'Hampir Sampai'], [30, '🎓 Lagu Lengkap']].forEach(function (m) {
+    const b = document.createElement('span');
+    b.className = 'sb-badge' + (unlocked >= m[0] ? ' reached' : '');
+    b.textContent = m[1];
+    if (m[0] === 30 && allDone) b.classList.add('grad');
+    badges.appendChild(b);
+  });
+  sec.appendChild(badges);
+
+  const play = document.createElement('button');
+  play.className = 'btn' + (unlocked > 0 ? '' : ' ghost');
+  play.textContent = unlocked > 0
+    ? '▶ Main Lagu Melodi (' + unlocked + ' nota' + (unlocked === 30 ? ' — LAGU PENUH!' : '') + ')'
+    : 'Selesaikan Hari 1 untuk buka nota pertama';
+  if (unlocked > 0) play.onclick = () => { P30PlaySong(unlocked); if (unlocked >= 30) P30Confetti(); };
+  sec.appendChild(play);
+
+  const hint = document.createElement('p');
+  hint.className = 'sb-hint';
+  hint.textContent = allDone
+    ? '🎓 Anda pemain sebenar sekarang. Lagu ini milik anda!'
+    : 'Setiap 7 nota, frasa baru berbunyi. 30 nota = lagu penuh!';
+  sec.appendChild(hint);
+
+  return sec;
+}

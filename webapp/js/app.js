@@ -415,6 +415,7 @@
     start.onclick = () => { location.hash = '#/hari-' + firstOpen.n; };
     cta.appendChild(start);
     app.appendChild(cta);
+    if (window.P30SongBoard) app.appendChild(P30SongBoard());
 
     let curWeek = 0;
     DAYS.forEach(d => {
@@ -485,6 +486,7 @@
       const isDone = cur.includes(n);
       finBtn.classList.toggle('is-done', isDone);
       finBtn.textContent = isDone ? '✓ Hari ini selesai — teruskan!' : '✓ Tandakan Hari ' + n + ' selesai';
+      if (isDone && window.P30OnDayDone) P30OnDayDone(n);
     };
     fin.appendChild(finBtn);
     fin.appendChild(el('p', null, 'Progress disimpan dalam pelayar anda — balik semula bila-bila masa.'));
