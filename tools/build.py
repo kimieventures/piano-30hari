@@ -14,12 +14,12 @@ DIST.mkdir(exist_ok=True)
 html = (SRC / "index.html").read_text(encoding="utf-8")
 css = (SRC / "css" / "style.css").read_text(encoding="utf-8")
 js_parts = []
-for name in ("audio.js", "data.js", "app.js"):
+for name in ("audio.js", "data.js", "melodi.js", "app.js"):
     js_parts.append(f"/* ===== {name} ===== */\n" + (SRC / "js" / name).read_text(encoding="utf-8"))
 
 html = re.sub(r'<link rel="stylesheet" href="css/style.css">', lambda m: "<style>\n" + css + "\n</style>", html)
 html = re.sub(
-    r'<script src="js/audio.js"></script>\s*<script src="js/data.js"></script>\s*<script src="js/app.js"></script>',
+    r'<script src="js/audio\.js"></script>\s*<script src="js/data\.js"></script>\s*<script src="js/melodi\.js"></script>\s*<script src="js/app\.js"></script>',
     lambda m: "<script>\n" + "\n".join(js_parts) + "\n</script>",
     html,
 )

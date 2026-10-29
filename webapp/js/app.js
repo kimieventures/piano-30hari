@@ -63,8 +63,12 @@
         if (!key) return;
         const m = +key.dataset.midi;
         flash(kb, [m], 180);
-        Audio30.ensure();
-        Audio30.tone(Audio30.freqOf(m), Audio30.now(), 1.1, 0.5);
+        const pm = document.querySelector('.melodi');
+        if (pm) { pm.classList.remove('wiggle'); void pm.offsetWidth; pm.classList.add('wiggle'); }
+        try {
+          Audio30.ensure();
+          Audio30.tone(Audio30.freqOf(m), Audio30.now(), 1.1, 0.5);
+        } catch (e) { /* pelayar tanpa Web Audio */ }
         if (opts.onKey) opts.onKey(m);
       });
     }
@@ -394,6 +398,7 @@
     const done = getDone();
     const firstOpen = DAYS.find(d => !done.includes(d.n)) || DAYS[DAYS.length - 1];
     const app = el('div');
+    if (window.P30Melodi) app.appendChild(P30Melodi(P30HomeGreeting(), {}));
     app.appendChild(el('div', 'hero',
       '<div class="kicker">Ebook interaktif · belajar sendiri · tanpa guru</div>' +
       '<h1>Belajar Main Piano & Keyboard<br>— <em>30 Hari</em></h1>' +
@@ -442,6 +447,7 @@
       '<div class="num">Hari ' + d.n + ' dari 30</div><h1>' + d.emoji + ' ' + esc(d.title) + '</h1>' +
       '<div class="goal"><b>🎯 Matlamat hari ini:</b> ' + esc(d.goal) + '</div>');
     app.appendChild(head);
+    if (window.P30Melodi) app.appendChild(P30Melodi(P30ChatDay(n), {}));
 
     d.secs.forEach((s, i) => {
       const sec = el('section', 'lesson');
@@ -463,6 +469,7 @@
       app.appendChild(sec);
     });
 
+    if (window.P30QuizWidget) app.appendChild(P30QuizWidget(n));
     app.appendChild(el('div', 'tip', '<b>📋 ' + esc(d.practice) + '</b>'));
 
     /* butang selesai */
